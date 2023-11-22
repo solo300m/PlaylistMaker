@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_all">20dp</dimen>
+    <dimen name="padding_horizontal">63dp</dimen>
+    <dimen name="padding_horiz_main">16dp</dimen>
+    <dimen name="padding_bottom_main">28dp</dimen>
+    <dimen name="app_font_size">26sp</dimen>
+    <dimen name="button_48_size">48dp</dimen>
+</resources>

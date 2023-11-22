@@ -1,18 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue_yp"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/padding_horiz_main"
+    android:paddingBottom="@dimen/padding_bottom_main"
     tools:context=".MainActivity">
-
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/app_font_size"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp"
+        android:layout_marginBottom="24dp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        app:cornerRadius = "16dp"
+        android:layout_marginBottom="6dp"
+        android:text="@string/find"
+        android:textSize="26sp"
+        android:textColor="@color/deepest_blue"
+        app:icon="@drawable/find"
+        app:iconSize = "26dp"
+        app:iconTint="@color/deepest_blue"
+        app:iconGravity="textStart"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        app:cornerRadius = "16dp"
+        android:layout_marginBottom="6dp"
+        android:text="@string/mediateka"
+        android:textSize="26sp"
+        android:textColor="@color/deepest_blue"
+        app:icon="@drawable/mediateka"
+        app:iconSize = "26dp"
+        app:iconTint="@color/deepest_blue"
+        app:iconGravity="textStart"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:text="@string/settings"
+        android:textSize="26sp"
+        android:textColor="@color/deepest_blue"
+        app:cornerRadius = "16dp"
+        app:icon="@drawable/setting"
+        app:iconSize = "26dp"
+        app:iconTint="@color/deepest_blue"
+        app:iconGravity="textStart"/>
+</LinearLayout>

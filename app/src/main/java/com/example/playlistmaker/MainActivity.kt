@@ -28,40 +28,20 @@ class MainActivity : AppCompatActivity() {
         val findButton = findViewById<Button>(R.id.find)
         val mTeka = findViewById<Button>(R.id.mediateka)
         val settButton = findViewById<Button>(R.id.setting)
-        val intentFind = Intent(this, FindActivity::class.java)
 
-        val findClickListener:View.OnClickListener = object:View.OnClickListener{
-            override fun onClick(v: View?) {
-                //Toast.makeText(this@MainActivity, "Нажата кнопка Поиск", Toast.LENGTH_SHORT).show()
-                startActivity(intentFind)
-            }
-        }
-        findButton.setOnClickListener(findClickListener);
+        findButton.setOnClickListener {
+            startActivity(Intent(this, FindActivity::class.java))
+        };
 
         mTeka.setOnClickListener {
-            val intent = Intent(this, MediatekaActivity::class.java)
+            //val intent = Intent(this, MediatekaActivity::class.java)
             //Toast.makeText(this@MainActivity, "Нажата кнопка Медиатека!", Toast.LENGTH_SHORT ).show()
-            startActivity(intent)
+            startActivity(Intent(this, MediatekaActivity::class.java))
         }
         settButton.setOnClickListener {
-            val intent = Intent(this, SettingActivity::class.java)
+            //val intent = Intent(this, SettingActivity::class.java)
             //Toast.makeText(this@MainActivity, "Нажата кнопка Настройки", Toast.LENGTH_SHORT).show()
-            startActivity(intent)
+            startActivity(Intent(this, SettingActivity::class.java))
         }
-
     }
-
-    /*override fun onStart() {
-        super.onStart()
-        Toast.makeText(this@MainActivity,"Метод onStart()",Toast.LENGTH_LONG).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Toast.makeText(this@MainActivity,"Метод onResume()",Toast.LENGTH_LONG).show()
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        Toast.makeText(this@MainActivity,"Метод onDestroy()",Toast.LENGTH_LONG).show()
-    }*/
 }

@@ -9,7 +9,7 @@
     <string name="mediateka">Медиатека</string>
     <string name="settings">Настройки</string>
     <string name="dark_theme">Темная тема</string>
-    <string name="Share_App">Поделиться приложением</string>
+    <string name="share_App">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>
     <string name="terms">Пользовательское соглашение</string>
 </resources>

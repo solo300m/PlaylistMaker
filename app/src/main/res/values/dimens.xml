@@ -6,4 +6,16 @@
     <dimen name="padding_bottom_main">28dp</dimen>
     <dimen name="app_font_size">26sp</dimen>
     <dimen name="button_48_size">48dp</dimen>
+    <dimen name="size_12">12dp</dimen>
+    <dimen name="size_24">24dp</dimen>
+    <dimen name="size_86">86dp</dimen>
+    <dimen name="size_6">6dp</dimen>
+    <dimen name="size_26">26dp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="size_21">21dp</dimen>
+    <dimen name="size_40">40dp</dimen>
+    <dimen name="size_9">9dp</dimen>
+    <dimen name="size_35">35dp</dimen>
+    <dimen name="size_45">45dp</dimen>
+    <dimen name="size_3">3dp</dimen>
 </resources>

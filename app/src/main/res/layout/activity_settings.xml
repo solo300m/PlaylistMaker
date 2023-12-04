@@ -14,26 +14,15 @@
         >
         <ImageView
             android:id="@+id/backSettingToMain"
-            android:layout_width="@dimen/button_48_size"
-            android:layout_height="@dimen/button_48_size"
-            android:backgroundTint="@color/white"
             android:src="@drawable/left"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding ="@dimen/size_12"
+            style="@style/ComeBackIcon"/>
 
-        />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings"
-            android:textSize="@dimen/app_font_size"
-            android:textColor="@color/deepest_blue"
-            android:textStyle="bold"
-            android:paddingBottom="@dimen/size_12"
-            android:paddingTop="@dimen/size_12"
-            android:paddingStart="@dimen/size_12"
-            android:paddingEnd="@dimen/size_86"/>
+            style="@style/TitleActivity"/>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,16 +33,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/dark_theme"
-            android:textSize="@dimen/text_size_16"
-            android:textColor="@color/black"
-            android:textStyle="normal"
-            android:paddingVertical="@dimen/size_21"
-            android:paddingStart="@dimen/padding_horiz_main"/>
-
+            style="@style/SubMenuActivity"/>
         <ImageView
+            android:src="@drawable/control"
             android:layout_width="@dimen/button_48_size"
             android:layout_height="@dimen/size_40"
-            android:src="@drawable/control"
             android:paddingHorizontal="@dimen/size_9"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/size_6"
@@ -68,20 +52,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/share_App"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:textStyle="normal"
-            android:paddingVertical="@dimen/size_21"
-            android:paddingStart="@dimen/padding_horiz_main"/>
-
+            style="@style/SubMenuActivity"/>
         <ImageView
-            android:layout_width="@dimen/size_35"
-            android:layout_height="@dimen/size_45"
             android:src="@drawable/share_24"
-            android:paddingHorizontal="@dimen/size_3"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/size_6"
-            />
+            style="@style/FunctionIcon"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,20 +66,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:textStyle="normal"
-            android:paddingVertical="@dimen/size_21"
-            android:paddingStart="@dimen/padding_horiz_main"/>
-
+            style="@style/SubMenuActivity"/>
         <ImageView
-            android:layout_width="@dimen/size_35"
-            android:layout_height="@dimen/size_45"
             android:src="@drawable/support"
-            android:paddingHorizontal="@dimen/size_3"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/size_6"
-            />
+            style="@style/FunctionIcon"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -116,20 +80,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/terms"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_16"
-            android:textStyle="normal"
-            android:paddingVertical="@dimen/size_21"
-            android:paddingStart="@dimen/padding_horiz_main"/>
-
+            style="@style/SubMenuActivity"/>
         <ImageView
-            android:layout_width="@dimen/size_35"
-            android:layout_height="@dimen/size_45"
             android:src="@drawable/rigth"
-            android:paddingHorizontal="@dimen/size_3"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/size_6"
-            />
+            style="@style/FunctionIcon"/>
     </LinearLayout>
-
 </LinearLayout>

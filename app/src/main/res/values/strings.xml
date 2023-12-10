@@ -12,4 +12,5 @@
     <string name="share_App">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>
     <string name="terms">Пользовательское соглашение</string>
+    <string name="find_string">Введите слово</string>
 </resources>

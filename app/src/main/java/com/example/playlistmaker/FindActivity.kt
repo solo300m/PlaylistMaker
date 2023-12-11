@@ -16,20 +16,20 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.DEBUG_PROPERTY_VALUE_AUTO
 
 class FindActivity: AppCompatActivity() {
-    lateinit var editText: EditText
-    var input:String? = null
+    private lateinit var editText: EditText
+    private var input:String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
 
         val findButton = findViewById<ImageView>(R.id.backFindToMain)
         findButton.setOnClickListener {
-            val intent4 = Intent(this, MainActivity::class.java)
-            startActivity(intent4)
+            finish()
+            //startActivity(Intent(this, MainActivity::class.java))
         }
 
         editText = findViewById<EditText>(R.id.searchField)
-        val linLayout = findViewById<LinearLayout>(R.id.editContainer)
+        // val linLayout = findViewById<LinearLayout>(R.id.editContainer)
         val clearBtn = findViewById<ImageView>(R.id.clearIcon)
 
         clearBtn.setOnClickListener {
@@ -83,8 +83,8 @@ class FindActivity: AppCompatActivity() {
             putString(TEXT_VIEW_KEY, editText.text.toString())
         }
     }
-    companion object{
+    private companion object{
         var TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
-        var VALUE_STRING = ""
+
     }
 }

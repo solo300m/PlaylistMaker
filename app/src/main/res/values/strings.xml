@@ -13,4 +13,7 @@
     <string name="support">Написать в поддержку</string>
     <string name="terms">Пользовательское соглашение</string>
     <string name="find_string">Введите слово</string>
+    <string name="titleEmailTest" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="subjectTest" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+
 </resources>

@@ -12,8 +12,9 @@ class MediatekaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_media)
         val backHome = findViewById<ImageView>(R.id.backMediaToMain)
         backHome.setOnClickListener {
-            val intent3 = Intent(this, MainActivity::class.java)
-            startActivity(intent3)
+            /*val intent3 = Intent(this, MainActivity::class.java)
+            startActivity(intent3)*/
+            finish()
         }
     }
 }

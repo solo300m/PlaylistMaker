@@ -1,11 +1,13 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+
 
 class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,8 +16,9 @@ class SettingActivity : AppCompatActivity() {
 
         val homeButton = findViewById<ImageView>(R.id.backSettingToMain)
         homeButton.setOnClickListener {
-            val intent2 = Intent(this, MainActivity::class.java)
-            startActivity(intent2)
+            /*val intent2 = Intent(this, MainActivity::class.java)
+            startActivity(intent2)*/
+            finish()
         }
         val sareButton = findViewById<ImageView>(R.id.sareButton);
         sareButton.setOnClickListener {
@@ -29,20 +32,28 @@ class SettingActivity : AppCompatActivity() {
         }
         val supButton = findViewById<ImageView>(R.id.supportButton)
         supButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SEND).apply {
+            val res:Resources = resources
+            val title:String = res.getString(R.string.titleEmailTest)
+            val substr:String = res.getString(R.string.subjectTest)
+            Intent(Intent.ACTION_SEND).apply {
                 type="text/plain"
                 putExtra(Intent.EXTRA_EMAIL, arrayOf("solo300m@yandex.ru"))
-                putExtra(Intent.EXTRA_SUBJECT, "Сообщение разработчикам и разработчицам приложения Playlist Maker")
-                putExtra(Intent.EXTRA_TEXT, "Спасибо разработчикам и разработчицам за крутое приложение!")
+                putExtra(Intent.EXTRA_SUBJECT, title)
+                putExtra(Intent.EXTRA_TEXT, substr)
+                startActivity(this)
             }
-            startActivity(intent)
+
         }
         val termsButton = findViewById<ImageView>(R.id.termsButton)
         termsButton.setOnClickListener {
-            val intent:Intent = Uri.parse("https://yandex.ru/legal/practicum_offer/").let{
+            /*val intent:Intent = Uri.parse("https://yandex.ru/legal/practicum_offer/").let{
                 webpage -> Intent(Intent.ACTION_VIEW, webpage)
             }
-           startActivity(intent)
+           startActivity(intent)*/
+            Intent(Intent.ACTION_VIEW).apply {
+                Uri.parse("https://yandex.ru/legal/practicum_offer/")
+                startActivity(this)
+            }
         }
     }
 

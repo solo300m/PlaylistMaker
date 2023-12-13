@@ -43,4 +43,31 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:visibility="invisible"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/findComeButton"
+            app:icon="@drawable/find"
+            android:text="Поиск"
+            app:iconTint="@color/blue_yp"
+            android:textColor="@color/blue_yp"
+            style="@style/ButtonMidleStyle"/>
+        <Button
+            android:id="@+id/mediaComeButton"
+            app:icon="@drawable/mediateka"
+            android:text="Медиатека"
+            style="@style/ButtonMidleStyle"/>
+        <Button
+            android:id="@+id/setComeButton"
+            app:icon="@drawable/setting"
+            android:text="Настройка"
+            style="@style/ButtonMidleStyle"/>
+    </LinearLayout>
 </LinearLayout>

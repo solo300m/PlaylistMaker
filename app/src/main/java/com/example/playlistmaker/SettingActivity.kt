@@ -2,17 +2,47 @@ package com.example.playlistmaker
 
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatDelegate
 
 
 class SettingActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        val control = findViewById<ImageView>(R.id.control)
+        control.setOnClickListener {
+            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
+                control.setImageResource(R.drawable.control2)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+            }else{
+                control.setImageResource(R.drawable.control)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+            }
+        }
+
+        val findBut = findViewById<Button>(R.id.findComeButton)
+        findBut.setOnClickListener {
+            startActivity(Intent(this, FindActivity::class.java))
+        }
+
+        val mediaBut = findViewById<Button>(R.id.mediaComeButton)
+        mediaBut.setOnClickListener {
+            startActivity(Intent(this, MediatekaActivity::class.java))
+        }
+
+        val setting = findViewById<Button>(R.id.setComeButton)
+        setting.setTextColor(resources.getColor(R.color.blue_yp, null))
+
 
         val homeButton = findViewById<ImageView>(R.id.backSettingToMain)
         homeButton.setOnClickListener {
@@ -22,7 +52,7 @@ class SettingActivity : AppCompatActivity() {
         }
         val sareButton = findViewById<ImageView>(R.id.sareButton);
         sareButton.setOnClickListener {
-            val message = "Курс по Андроид разработке на Яндекс.Практикум. https://practicum.yandex.ru/android-developer/?utm_source=yandex&utm_medium=cpc&utm_campaign=Yan_Net_RF_Andd_460&utm_content=sty_context%3As_mail.yandex.ru%3Acid_75977624%3Agid_5009705635%3Akw_skillbox+android+%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%3Apid_40761299115%3Aaid_13214318978%3Acrid_0%3Arid_40761299115%3Ap_0%3Apty_none%3Amty_%3Amkw_%3Adty_desktop%3Acgcid_0%3Arn_%D0%98%D0%B6%D0%B5%D0%B2%D1%81%D0%BA%3Arid_44&utm_term=skillbox+android+%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA&yclid=4129482520796652835"
+            val message = resources.getString(R.string.promoText)
             val sareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT,message)
@@ -32,9 +62,9 @@ class SettingActivity : AppCompatActivity() {
         }
         val supButton = findViewById<ImageView>(R.id.supportButton)
         supButton.setOnClickListener {
-            val res:Resources = resources
-            val title:String = res.getString(R.string.titleEmailTest)
-            val substr:String = res.getString(R.string.subjectTest)
+
+            val title:String = resources.getString(R.string.titleEmailTest)
+            val substr:String = resources.getString(R.string.subjectTest)
             Intent(Intent.ACTION_SEND).apply {
                 type="text/plain"
                 putExtra(Intent.EXTRA_EMAIL, arrayOf("solo300m@yandex.ru"))
@@ -51,7 +81,7 @@ class SettingActivity : AppCompatActivity() {
             }
            startActivity(intent)*/
             Intent(Intent.ACTION_VIEW).apply {
-                Uri.parse("https://yandex.ru/legal/practicum_offer/")
+                Uri.parse(resources.getString(R.string.yandexText))
                 startActivity(this)
             }
         }

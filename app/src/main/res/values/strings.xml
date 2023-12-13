@@ -15,5 +15,6 @@
     <string name="find_string">Введите слово</string>
     <string name="titleEmailTest" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="subjectTest" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
-
+    <string name="promoText" translatable="false">https://practicum.yandex.ru/android-developer/</string>
+    <string name="yandexText" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
 </resources>

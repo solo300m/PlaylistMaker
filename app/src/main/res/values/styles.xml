@@ -21,7 +21,7 @@
     </style>
     <style name="TitleActivity">
         <item name="android:textSize">@dimen/app_font_size</item>
-        <item name="android:textColor">@color/deepest_blue</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:paddingBottom">@dimen/size_12</item>
@@ -31,7 +31,7 @@
     </style>
     <style name="SubMenuActivity">
         <item name="android:textSize">@dimen/text_size_16</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textStyle">normal</item>
         <item name="android:paddingVertical">@dimen/size_21</item>
         <item name="android:paddingStart">@dimen/padding_horiz_main</item>
@@ -41,7 +41,7 @@
         <item name="android:layout_height">@dimen/button_48_size</item>
         <item name="android:padding">@dimen/size_12</item>
         <item name="android:layout_gravity">center</item>
-        <item name="backgroundTint">@color/white</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
     </style>
     <style name="FunctionIcon">
         <item name="android:layout_width">@dimen/size_35</item>
@@ -67,6 +67,23 @@
         <item name="cornerRadius">@dimen/size_8</item>
         <item name="iconTint">@color/black</item>
         <item name="fontFamily">@font/ys_display_medium</item>
+    </style>
+    <style name="ButtonMidleStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">?attr/colorAccent</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="iconTint">?attr/colorPrimary</item>
+        <item name="iconSize">@dimen/size_24</item>
+        <item name="iconGravity">textTop</item>
+        <item name="android:padding">@dimen/size_8</item>
+
     </style>
     <style name="ButtonMainStyle" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/white</item>

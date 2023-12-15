@@ -12,7 +12,7 @@
     <string name="share_App">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>
     <string name="terms">Пользовательское соглашение</string>
-    <string name="find_string">Введите слово</string>
+    <string name="find_string">Поиск</string>
     <string name="titleEmailTest" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="subjectTest" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="promoText" translatable="false">https://practicum.yandex.ru/android-developer/</string>

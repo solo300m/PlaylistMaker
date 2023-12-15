@@ -61,7 +61,7 @@ class FindActivity: AppCompatActivity() {
     }
     private fun clearButtonVisibility(s: CharSequence?):Int{
         if(s.isNullOrEmpty()){
-            return View.INVISIBLE
+            return View.GONE
         }else{
             return View.VISIBLE
         }

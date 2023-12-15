@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/deepest_blue</item>
         <item name="colorAccent">@color/white</item>
         <item name="colorSecondary">@color/blue_yp</item>
+        <item name="colorOnSecondary">@color/smoke_gray</item>
         <item name="android:navigationBarColor">@color/deepest_blue</item>
     </style>
 

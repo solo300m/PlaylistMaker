@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorAccent">@color/deepest_blue</item>
         <item name="colorSecondary">@color/deepest_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
         <item name="android:windowBackground">@color/deepest_blue</item>
+        <item name="hintTextAppearance">@color/black</item>
     </style>
 </resources>

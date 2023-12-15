@@ -20,4 +20,5 @@
     <dimen name="size_3">3dp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="size_8">8dp</dimen>
+    <dimen name="size_10">10dp</dimen>
 </resources>

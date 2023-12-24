@@ -1,37 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindActivity">
+    tools:context=".find.FindActivity"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/size_24"
-        >
+        android:orientation="horizontal">
         <ImageView
             android:id="@+id/backFindToMain"
-            android:layout_width="@dimen/button_48_size"
-            android:layout_height="@dimen/button_48_size"
-            android:backgroundTint="@color/white"
             android:src="@drawable/left"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding ="@dimen/size_12"
 
+            style="@style/ComeBackIcon"
             />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/find"
-            android:textSize="@dimen/app_font_size"
-            android:textStyle="bold"
-            android:paddingBottom="@dimen/size_12"
-            android:paddingTop="@dimen/size_12"
-            android:paddingStart="@dimen/size_12"
-            android:paddingEnd="@dimen/size_86"/>
+            style="@style/TitleActivity"/>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/editContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="@dimen/size_16"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/find_local"
+            android:layout_gravity="center"
+            android:paddingTop="@dimen/size_10"
+            android:paddingBottom="@dimen/size_9"
+            android:paddingStart="@dimen/size_9"
+            android:background="@color/smoke_gray"/>
+
+        <EditText
+            android:id="@+id/searchField"
+            android:hint="@string/find_string"
+            style="@style/SearchBar"
+             />
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:paddingStart="@dimen/size_16"
+
+            android:background="@color/smoke_gray"
+            android:src="@drawable/baseline_close_24"
+            android:visibility="gone"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/size_13">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/findList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/findComeButton"
+            app:icon="@drawable/find"
+            android:text="Поиск"
+            app:iconTint="@color/blue_yp"
+            android:textColor="@color/blue_yp"
+            style="@style/ButtonMidleStyle"/>
+        <Button
+            android:id="@+id/mediaComeButton"
+            app:icon="@drawable/mediateka"
+            android:text="Медиатека"
+            style="@style/ButtonMidleStyle"/>
+        <Button
+            android:id="@+id/setComeButton"
+            app:icon="@drawable/setting"
+            android:text="Настройка"
+            style="@style/ButtonMidleStyle"/>
+    </LinearLayout>
+</LinearLayout>

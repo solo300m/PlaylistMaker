@@ -3,11 +3,15 @@ package com.example.playlistmaker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
+import com.example.playlistmaker.find.FindActivity
+import java.io.Serializable
 
+
+data class Buffer(
+    val text1:String,
+    val text2:String
+):Serializable
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +34,11 @@ class MainActivity : AppCompatActivity() {
         val settButton = findViewById<Button>(R.id.setting)
 
         findButton.setOnClickListener {
-            startActivity(Intent(this, FindActivity::class.java))
+            val textOut:Buffer = Buffer("Text first parameter", "Text second parameter")
+            val message = "Hello, My friend - programmer!"
+            val intent = Intent(this, FindActivity::class.java)
+            intent.putExtra("textOut", textOut);
+            startActivity(intent)
         };
 
         mTeka.setOnClickListener {

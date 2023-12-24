@@ -5,17 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 
-class FindAdapter(private val list: List<Track>):RecyclerView.Adapter<FindViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FindViewHolder {
+class TrackAdapter(private val list: List<Track>):RecyclerView.Adapter<TrackViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_cart, parent,false)
-        return FindViewHolder(view)
+        return TrackViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    override fun onBindViewHolder(holder: FindViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(list[position])
     }
 }

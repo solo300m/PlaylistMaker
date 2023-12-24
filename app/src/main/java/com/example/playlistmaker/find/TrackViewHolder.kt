@@ -1,6 +1,7 @@
 package com.example.playlistmaker.find
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,7 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 
 
-class FindViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
+class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
     private val trackName: TextView
     private val authorTrace: TextView
     private val timeTrack: TextView
@@ -27,6 +28,13 @@ class FindViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
         card = parentView.findViewById(R.id.cardTrack)
         view = parentView
     }
+    private fun dpToPx(dp: Float, context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            context.resources.displayMetrics).toInt()
+    }
+    private val tmp: Int = dpToPx(2f, itemView.context)
 
     fun bind(model: Track) {
         trackName.text = model.trackName
@@ -36,7 +44,7 @@ class FindViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
             .with(view)
             .load(model.artworkUrl100)
             .placeholder(R.drawable.barsik)
-            .transform(RoundedCorners(10))
+            .transform(RoundedCorners(tmp))
             .into(pictureTrack)
     }
 }

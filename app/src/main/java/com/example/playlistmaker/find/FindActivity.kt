@@ -61,7 +61,7 @@ class FindActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.findList)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        recyclerView.adapter = FindAdapter(trackList)
+        recyclerView.adapter = TrackAdapter(trackList)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -90,8 +90,8 @@ class FindActivity : AppCompatActivity() {
     }
 
     private companion object {
-        var TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
-        var trackList: MutableList<Track> = mutableListOf(
+        const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
+        val trackList: MutableList<Track> = mutableListOf(
             Track(
                 1, "Smells Like Teen Spirit",
                 "Nirvana", "5:01",

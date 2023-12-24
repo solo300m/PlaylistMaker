@@ -4,6 +4,7 @@
         <!-- Customize your dark theme here. -->
         <item name="colorPrimaryDark">@color/deepest_blue</item>
         <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimarySurface">@color/white</item>
         <item name="colorAccent">@color/deepest_blue</item>
         <item name="colorSecondary">@color/deepest_blue</item>
         <item name="colorOnSecondary">@color/white</item>

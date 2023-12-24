@@ -1,14 +1,13 @@
 package com.example.playlistmaker
 
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.find.FindActivity
 
 
 class SettingActivity : AppCompatActivity() {

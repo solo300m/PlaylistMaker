@@ -43,7 +43,7 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
         Glide
             .with(view)
             .load(model.artworkUrl100)
-            .placeholder(R.drawable.barsik)
+            .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(tmp))
             .into(pictureTrack)
     }

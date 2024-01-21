@@ -56,6 +56,8 @@ class FindActivity : AppCompatActivity() {
 
         clearBtn.setOnClickListener {
             editText.setText("")
+            trecks.clear()
+            recyclerView.adapter?.notifyDataSetChanged()
             val view = this.currentFocus
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -149,7 +151,7 @@ class FindActivity : AppCompatActivity() {
 
     private companion object {
         const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
-        val trackList: MutableList<Track> = mutableListOf(
+        /*val trackList: MutableList<Track> = mutableListOf(
             Track(
                 1, "Smells Like Teen Spirit",
                 "Nirvana", "5:01",
@@ -181,6 +183,6 @@ class FindActivity : AppCompatActivity() {
                 "5:03",
                 "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
             )
-        )
+        )*/
     }
 }

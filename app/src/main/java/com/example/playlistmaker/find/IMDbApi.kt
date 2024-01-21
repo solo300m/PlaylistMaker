@@ -6,5 +6,5 @@ import retrofit2.http.Query
 
 interface IMDbApi {
     @GET("/search?entity=song")
-    fun search(@Query("tepm") text: String): Call<TrackResponse>
+    fun search(@Query("term") text: String): Call<TrackResponse>
 }

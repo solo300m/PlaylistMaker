@@ -4,31 +4,55 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class FindActivity : AppCompatActivity() {
     private lateinit var editText: EditText
+    private lateinit var clearBtn:ImageView
+    private lateinit var recyclerView:RecyclerView
+    private lateinit var findButton:ImageView
+
+    private val trecks = ArrayList<Track>()
+    private val adapter = TrackAdapter(trecks)
+
     private var input: String? = null
+
+    private val tracBaseURL = "https://itunes.apple.com"
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(tracBaseURL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val trackService = retrofit.create(IMDbApi::class.java)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
 
-        val findButton = findViewById<ImageView>(R.id.backFindToMain)
+        findButton = findViewById(R.id.backFindToMain)
         findButton.setOnClickListener {
             finish()
-            //startActivity(Intent(this, MainActivity::class.java))
         }
 
         editText = findViewById<EditText>(R.id.searchField)
         // val linLayout = findViewById<LinearLayout>(R.id.editContainer)
-        val clearBtn = findViewById<ImageView>(R.id.clearIcon)
+
+
+        clearBtn = findViewById(R.id.clearIcon)
 
         clearBtn.setOnClickListener {
             editText.setText("")
@@ -57,11 +81,45 @@ class FindActivity : AppCompatActivity() {
             }
         }
         editText.addTextChangedListener(simpleTextWatcher)
+        editText.setOnEditorActionListener{ _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                Log.d("MYAPPLOG","Завершен ввод в строку поиска. Введенное значение ${input}")
+                Toast.makeText(applicationContext, "Выбран для поиска ${input}",Toast.LENGTH_LONG).show()
+                if(!input.isNullOrEmpty()){
+                    trackService.search(input.toString()).enqueue(object : Callback<TrackResponse>{
+                        override fun onResponse(
+                            call: Call<TrackResponse>,
+                            response: Response<TrackResponse>
+                        ) {
+                            if(response.code()==200){
+                                trecks.clear()
+                                if(response.body()?.results?.isNotEmpty() == true){
+                                    trecks.addAll(response.body()?.results!!)
+                                    recyclerView.adapter?.notifyDataSetChanged()
+                                }
+                                if(trecks.isEmpty()){
+                                    Toast.makeText(applicationContext,"Что-то пошло не так! Список пуст!",Toast.LENGTH_LONG).show()
+                                }
+                            }else{
+                                val code = response.code()
+                                Toast.makeText(applicationContext,"Что-то пошло не так! Код ответа сервера ${code}",Toast.LENGTH_LONG).show()
+                            }
+                        }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.findList)
+                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                            Toast.makeText(applicationContext,"Что-то пошло не так!",Toast.LENGTH_LONG).show()
+                        }
+
+                    })
+                }
+                true
+            }
+            false
+        }
+        recyclerView = findViewById(R.id.findList)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        recyclerView.adapter = TrackAdapter(trackList)
+        recyclerView.adapter = adapter
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {

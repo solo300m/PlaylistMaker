@@ -43,6 +43,8 @@
         <EditText
             android:id="@+id/searchField"
             android:hint="@string/find_string"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             style="@style/SearchBar"
              />
 

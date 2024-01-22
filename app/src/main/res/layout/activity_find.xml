@@ -61,6 +61,69 @@
             android:visibility="gone"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/placeholder_200"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="102dp"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:foregroundGravity="center"
+            android:src="@drawable/error_find_200"
+            android:layout_marginBottom="@dimen/size_16"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/what_go_wrong"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/text_size_20"
+            android:textStyle="bold"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/placeholder_500"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="102dp"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:foregroundGravity="center"
+            android:src="@drawable/error_500"
+            android:layout_marginBottom="@dimen/size_16"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_connect"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/text_size_20"
+            android:textStyle="bold"
+            android:layout_marginBottom="30dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_connect_topic"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_20"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+        <Button
+            android:id="@+id/updateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

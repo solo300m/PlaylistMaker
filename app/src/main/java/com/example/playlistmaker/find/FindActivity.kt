@@ -6,10 +6,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,9 +26,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class FindActivity : AppCompatActivity() {
     private lateinit var editText: EditText
-    private lateinit var clearBtn:ImageView
-    private lateinit var recyclerView:RecyclerView
-    private lateinit var findButton:ImageView
+    private lateinit var clearBtn: ImageView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var findButton: ImageView
+    private lateinit var place_200: LinearLayout
+    private lateinit var place_500: LinearLayout
+    private lateinit var updateButton: Button
 
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(tracks)
@@ -43,6 +49,9 @@ class FindActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
 
+        place_200 = findViewById(R.id.placeholder_200)
+        place_500 = findViewById(R.id.placeholder_500)
+        updateButton = findViewById(R.id.updateButton)
         findButton = findViewById(R.id.backFindToMain)
         findButton.setOnClickListener {
             finish()
@@ -58,6 +67,7 @@ class FindActivity : AppCompatActivity() {
             editText.setText("")
             tracks.clear()
             recyclerView.adapter?.notifyDataSetChanged()
+            place_200.visibility = View.GONE
             val view = this.currentFocus
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -83,10 +93,11 @@ class FindActivity : AppCompatActivity() {
             }
         }
         editText.addTextChangedListener(simpleTextWatcher)
-        editText.setOnEditorActionListener{ _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                Log.d("MYAPPLOG","Завершен ввод в строку поиска. Введенное значение ${input}")
-                Toast.makeText(applicationContext, "Выбран для поиска ${input}",Toast.LENGTH_LONG).show()
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Log.d("MYAPPLOG", "Завершен ввод в строку поиска. Введенное значение ${input}")
+                Toast.makeText(applicationContext, "Выбран для поиска ${input}", Toast.LENGTH_LONG)
+                    .show()
                 onFindToInternet()
                 true
             }
@@ -95,33 +106,49 @@ class FindActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.findList)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
+
+        updateButton.setOnClickListener {
+            onFindToInternet()
+        }
     }
 
-    private fun onFindToInternet(){
-        if(!input.isNullOrEmpty()){
-            trackService.search(input.toString()).enqueue(object : Callback<TrackResponse>{
+
+    private fun onFindToInternet() {
+        if (!input.isNullOrEmpty()) {
+            trackService.search(input.toString()).enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-                    if(response.code()==200){
+                    if (response.code() == 200) {
                         tracks.clear()
-                        if(response.body()?.results?.isNotEmpty() == true){
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            if(place_500.visibility == View.VISIBLE){
+                                place_500.visibility = View.GONE
+                            }
                             tracks.addAll(response.body()?.results!!)
                             recyclerView.adapter?.notifyDataSetChanged()
-                        }
-                        if(tracks.isEmpty()){
-                            Toast.makeText(applicationContext,R.string.what_go_wrong,Toast.LENGTH_LONG).show()
 
                         }
-                    }else{
+                        if (tracks.isEmpty()) {
+                            Toast.makeText(
+                                applicationContext,
+                                R.string.what_go_wrong,
+                                Toast.LENGTH_LONG
+                            ).show()
+                            place_200.visibility = View.VISIBLE
+                        }
+                    } else {
                         val code = response.code()
-                        val tmp = ""+R.string.error_of_server +" ${code}"
-                        Toast.makeText(applicationContext,tmp,Toast.LENGTH_LONG).show()
+                        val tmp = "" + R.string.error_of_server + " ${code}"
+                        Toast.makeText(applicationContext, tmp, Toast.LENGTH_LONG).show()
+                        place_500.visibility = View.VISIBLE
                     }
                 }
+
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    Toast.makeText(applicationContext,R.string.to_wrong,Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, R.string.to_wrong, Toast.LENGTH_LONG).show()
+                    place_500.visibility = View.VISIBLE
                 }
             })
         }

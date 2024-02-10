@@ -1,9 +1,13 @@
 package com.example.playlistmaker.find
 
 data class Track(
-    val id:Int,
+    val trackId:Long,
     val trackName: String,
     val artistName: String,
-    val trackTime: String,
+    val trackTimeMillis: Long,
     val artworkUrl100: String
-)
+){
+    fun getId():Long{
+        return trackId
+    }
+}

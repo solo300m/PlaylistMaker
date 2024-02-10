@@ -4,7 +4,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface IMDbApi {
+interface TrackApi {
     @GET("/search?entity=song")
-    fun search(@Query("term") text: String): Call<TrackResponse>
+    fun getIdTrack(@Query("term") id: Long):Call<TrackResponse>
 }

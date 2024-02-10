@@ -17,4 +17,12 @@
     <string name="subjectTest" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="promoText" translatable="false">https://practicum.yandex.ru/android-developer/</string>
     <string name="yandexText" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="what_go_wrong" translatable="false">Ничего не нашлось!</string>
+    <string name="error_of_server" translatable="false">Что-то пошло не так! Код ответа сервера</string>
+    <string name="to_wrong" translatable="false">Что-то пошло не так!</string>
+    <string name="problem_connect" translatable="false">Проблемы со связью</string>
+    <string name="problem_connect_topic" translatable="false">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="update">Обновить</string>
+    <string name="titleFind">Вы искали</string>
+    <string name="clearFindHistory">Очистить историю</string>
 </resources>

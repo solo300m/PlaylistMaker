@@ -1,8 +1,18 @@
 package com.example.playlistmaker.find
 
-
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+import android.view.View
+import android.widget.Toast
+import com.example.playlistmaker.R
 import com.example.playlistmaker.find.FindActivity.Companion.trackList
 import com.example.playlistmaker.find.FindActivity.Companion.tracks
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 signs"

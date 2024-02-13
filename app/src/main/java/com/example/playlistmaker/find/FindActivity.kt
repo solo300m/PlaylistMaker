@@ -38,8 +38,8 @@ class FindActivity : AppCompatActivity() {
     private lateinit var place_200: LinearLayout
     private lateinit var place_500: LinearLayout
     private lateinit var updateButton: Button
-    private lateinit var titleFind: TextView
-    private lateinit var clearButtonFind: Button
+    private lateinit var titleFind: TextView//заголовок сохраненного списка
+    private lateinit var clearButtonFind: Button//кнопка очистки списка сохраненных треков
 
 
     private val adapter = TrackAdapter(tracks)
@@ -58,16 +58,16 @@ class FindActivity : AppCompatActivity() {
         setContentView(R.layout.activity_find)
         titleFind = findViewById(R.id.titleFind)
         clearButtonFind = findViewById(R.id.clearFind)
-        val sharedPref = getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)
-        loadList(sharedPref)
+        val sharedPref = getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)//инициация SharedPreferences
+        loadList(sharedPref) // загрузка сохраненного списка из sharedPreferences
         if (trackList.isNotEmpty()) {
             tracks.clear()
-            tracks.addAll(trackList.reversed())
-            titleFind.visibility = View.VISIBLE
-            clearButtonFind.visibility = View.VISIBLE
+            tracks.addAll(trackList.reversed())// загрузка сохраненного списка из sharedPreferences в реверсивном виде
+            titleFind.visibility = View.VISIBLE // включение видимости заголовка "Вы искали"
+            clearButtonFind.visibility = View.VISIBLE //кнопка "Очистить список" видимость true
         }else{
-            titleFind.visibility = View.GONE
-            clearButtonFind.visibility = View.GONE
+            titleFind.visibility = View.GONE // Выключение заголовка
+            clearButtonFind.visibility = View.GONE //Выключение списка
         }
 
         place_200 = findViewById(R.id.placeholder_200)
@@ -81,7 +81,7 @@ class FindActivity : AppCompatActivity() {
             finish()
         }
 
-        clearButtonFind.setOnClickListener {
+        clearButtonFind.setOnClickListener {//обработчик кнопки "Очистка списка"
             clearTrackList(sharedPref)
             titleFind.visibility = View.GONE
             clearButtonFind.visibility = View.GONE
@@ -99,10 +99,10 @@ class FindActivity : AppCompatActivity() {
             clearButtonFind.visibility = View.VISIBLE
             editText.setText("")
             tracks.clear()
-            writeList(sharedPref)
-            loadList(sharedPref)
+            writeList(sharedPref) //сохранение списка в sharedPreferences
+            loadList(sharedPref) //загрузка из sharedPreferences
             if (trackList.isNotEmpty()) {
-                tracks.addAll(trackList.reversed())
+                tracks.addAll(trackList.reversed()) //reversed для обеспечения первой позиции последней запрошенной записи
             }
             recyclerView.adapter?.notifyDataSetChanged()
             place_200.visibility = View.GONE
@@ -134,8 +134,8 @@ class FindActivity : AppCompatActivity() {
         editText.addTextChangedListener(simpleTextWatcher)
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                titleFind.visibility = View.GONE
-                clearButtonFind.visibility = View.GONE
+                titleFind.visibility = View.GONE //выключение заголовка "Вы искали"
+                clearButtonFind.visibility = View.GONE //Выключение кнопки "Очистка списка"
 
                 Log.d("MYAPPLOG", "Завершен ввод в строку поиска. Введенное значение ${input}")
                 Toast.makeText(applicationContext, "Выбран для поиска ${input}", Toast.LENGTH_LONG)
@@ -161,22 +161,22 @@ class FindActivity : AppCompatActivity() {
         writeList(sharedPreferences)
     }
 
-    fun loadList(sharedPreferences: SharedPreferences) {
+    fun loadList(sharedPreferences: SharedPreferences) { // функция выгрузки из sharedPreferences в переменную trackList
         val tmpArray = read(sharedPreferences);
         trackList.clear()
         trackList.addAll(tmpArray)
     }
 
-    fun writeList(sharedPreferences: SharedPreferences) {
+    fun writeList(sharedPreferences: SharedPreferences) { // функция сохранения в sharedPreferences из trackList
         write(sharedPreferences, trackList)
     }
 
-    private fun read(sharedPreferences: SharedPreferences): Array<Track> {
+    private fun read(sharedPreferences: SharedPreferences): Array<Track> { // функция выгрузки из sharedPreferences служебная
         val json = sharedPreferences.getString(TRACK_LIST_KEY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 
-    private fun write(sharedPreferences: SharedPreferences, tracksList: List<Track>) {
+    private fun write(sharedPreferences: SharedPreferences, tracksList: List<Track>) { // функция сохранения в sharedPreferences служебная
         val json = Gson().toJson(tracksList)
         sharedPreferences.edit()
             .putString(TRACK_LIST_KEY, json)

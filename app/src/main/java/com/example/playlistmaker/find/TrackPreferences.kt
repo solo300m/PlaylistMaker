@@ -1,5 +1,5 @@
 package com.example.playlistmaker.find
-
+// класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.view.View
@@ -17,11 +17,11 @@ import java.util.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 signs"
 
-class TrackPreferences {
+class TrackPreferences { // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
     //var trackList: MutableList<Track> = mutableListOf()
-    val trackTmp = ArrayList<Track>()
+    val trackTmp = ArrayList<Track>() //временная переменная для сохранения Track на которой был осуществлен клик
 
-    fun addTrackToList(unit: Track) {
+    fun addTrackToList(unit: Track) { // формирование ограниченного списка сохраненных треков
         var idx = -1
         if (unit != null) {
             for (i in 0..trackList.size-1) {
@@ -42,7 +42,7 @@ class TrackPreferences {
         }
     }
 
-    fun onFindToTrack(input: Long) {
+    fun onFindToTrack(input: Long) { // поиск трека по клику на позиции в RecyclerView
         if (input != 0L && !tracks.isEmpty()) {
             for(i in 0..tracks.size-1){
                 if(tracks[i].trackId == input){

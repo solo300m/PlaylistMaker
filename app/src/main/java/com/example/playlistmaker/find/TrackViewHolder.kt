@@ -26,7 +26,7 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
     private val card: ConstraintLayout
     private val view: View
     private var trackId by Delegates.notNull<Long>()
-    private var objectSave = TrackPreferences()
+    private var objectSave = TrackPreferences() // объект класса TrackPreferences для обработки и сохранения клика на RecyclerView
 
     init {
         trackName = parentView.findViewById(R.id.trackName)
@@ -36,7 +36,7 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
         card = parentView.findViewById(R.id.cardTrack)
         view = parentView
 
-        card.setOnClickListener {
+        card.setOnClickListener { // обработка события Click на карточки трека RecyclerView
             objectSave.onFindToTrack(trackId.toLong())
             val tmp = objectSave.trackTmp[0]
             Toast.makeText(view.context,"Выбран трек с ID ${tmp.trackId}", Toast.LENGTH_LONG).show()

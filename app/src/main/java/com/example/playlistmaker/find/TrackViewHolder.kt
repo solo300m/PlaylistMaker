@@ -27,6 +27,10 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
     private val view: View
     private var trackId by Delegates.notNull<Long>()
     private var objectSave = TrackPreferences() // объект класса TrackPreferences для обработки и сохранения клика на RecyclerView
+    private val dateFormat by lazy {
+        SimpleDateFormat("mm : ss", Locale.getDefault())
+    }
+    val viewM = FindViewModel()
 
     init {
         trackName = parentView.findViewById(R.id.trackName)
@@ -39,7 +43,7 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
         card.setOnClickListener { // обработка события Click на карточки трека RecyclerView
             objectSave.onFindToTrack(trackId.toLong())
             val tmp = objectSave.trackTmp[0]
-            Toast.makeText(view.context,"Выбран трек с ID ${tmp.trackId}", Toast.LENGTH_LONG).show()
+            //Toast.makeText(view.context,"Выбран трек с ID ${tmp.trackId}", Toast.LENGTH_LONG).show()
             objectSave.addTrackToList(tmp)
 
         }
@@ -56,7 +60,7 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
         trackId = model.trackId
         trackName.text = model.trackName
         authorTrace.text = model.artistName
-        timeTrack.text = SimpleDateFormat("mm : ss", Locale.getDefault()).format(model.trackTimeMillis)
+        timeTrack.text = dateFormat.format(model.trackTimeMillis)
         Glide
             .with(view)
             .load(model.artworkUrl100)

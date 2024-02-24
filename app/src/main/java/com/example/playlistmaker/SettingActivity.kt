@@ -16,14 +16,14 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val control = findViewById<ImageView>(R.id.control)
-        control.setOnClickListener {
+        val cont = findViewById<ImageView>(R.id.control)
+        cont.setOnClickListener {
             if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
-                control.setImageResource(R.drawable.control2)
+                cont.setImageResource(R.drawable.control2)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
             }else{
-                control.setImageResource(R.drawable.control)
+                cont.setImageResource(R.drawable.control)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
             }

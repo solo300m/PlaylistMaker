@@ -1,5 +1,6 @@
 package com.example.playlistmaker.find
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -18,6 +19,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -33,7 +37,7 @@ class FindActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var clearBtn: ImageView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var recyclerBlock: LinearLayout
+    //private lateinit var recyclerBlock: LinearLayout
     private lateinit var findButton: ImageView
     private lateinit var place_200: LinearLayout
     private lateinit var place_500: LinearLayout
@@ -52,10 +56,13 @@ class FindActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val trackService = retrofit.create(IMDbApi::class.java)
-
+    private val findVM:FindViewModel by lazy{
+        ViewModelProvider(this).get(FindViewModel::class.java)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
+
         titleFind = findViewById(R.id.titleFind)
         clearButtonFind = findViewById(R.id.clearFind)
         val sharedPref = getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)//инициация SharedPreferences
@@ -74,7 +81,7 @@ class FindActivity : AppCompatActivity() {
         place_500 = findViewById(R.id.placeholder_500)
         updateButton = findViewById(R.id.updateButton)
         findButton = findViewById(R.id.backFindToMain)
-        recyclerBlock = findViewById(R.id.recycleBlock)
+        //recyclerBlock = findViewById(R.id.recycleBlock)
 
 
         findButton.setOnClickListener {

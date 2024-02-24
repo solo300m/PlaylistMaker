@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/heightCont"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -33,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@id/titleBlock"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
+        app:layout_constraintBottom_toTopOf="@id/titleFind"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -101,6 +102,7 @@
         app:layout_constraintTop_toBottomOf="@id/editContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -139,54 +141,64 @@
             android:text="@string/update"
             android:layout_gravity="center"/>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/recycleBlock"
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/topRecyclerBarr"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/editContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/size_13">
-        <TextView
-            android:id="@+id/titleFind"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/titleFind"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:fontFamily="@font/ys_display_medium"
-            android:textSize="@dimen/text_size_19"
-            android:layout_marginBottom="@dimen/size_16"
-            android:visibility="gone"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/findList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layout_constraintBottom_toTopOf="@id/titleFind"
+        app:constraint_referenced_ids="editContainer"
+        app:barrierDirection="bottom"
+        />
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/titleFind"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/recycleBlock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/clearFind"
-            android:layout_marginBottom="@dimen/size_24"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/clearFindHistory"
-            android:fontFamily="@font/ys_display_medium"
-            android:textSize="@dimen/text_size_16"
-            android:layout_marginVertical="@dimen/size_16"
-            android:visibility="gone"/>
-    </LinearLayout>
+        android:text="@string/titleFind"
+        app:layout_constraintTop_toBottomOf="@id/topRecyclerBarr"
+        app:layout_constraintStart_toStartOf="@id/heightCont"
+        app:layout_constraintEnd_toEndOf="@id/heightCont"
+        android:gravity="center"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="@dimen/text_size_19"
+        android:layout_marginBottom="@dimen/size_16"
+        android:visibility="gone"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/findList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/titleFind"
+        app:layout_constraintStart_toStartOf="@id/heightCont"
+        app:layout_constraintEnd_toEndOf="@id/heightCont"
+        app:layout_constraintBottom_toTopOf="@id/clearFind"
+        android:scrollbars="vertical"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/size_16"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    <Button
+        android:id="@+id/clearFind"
+        android:layout_marginBottom="@dimen/size_24"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:text="@string/clearFindHistory"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="@dimen/text_size_16"
+        android:layout_marginVertical="@dimen/size_16"
+        app:layout_constraintBottom_toTopOf="@id/footerFind"
+        app:layout_constraintStart_toStartOf="@id/footerFind"
+        app:layout_constraintEnd_toEndOf="@id/footerFind"
+        android:visibility="gone"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/footerFind"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="footerFind"
+        />
+
     <LinearLayout
         android:id="@+id/footerFind"
         app:layout_constraintEnd_toEndOf="parent"

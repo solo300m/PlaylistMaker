@@ -1,13 +1,18 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.find.FindActivity
+import com.example.playlistmaker.find.TRACK_LIST_KEY
+import com.example.playlistmaker.find.Track
+import com.google.gson.Gson
 
 
 class SettingActivity : AppCompatActivity() {
@@ -15,17 +20,31 @@ class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
+        val stateSave = StateSaveClass()
+        val sharedSet = getSharedPreferences(SETTING_SAVE, MODE_PRIVATE)
         val cont = findViewById<ImageView>(R.id.control)
+        var stateG = stateSave.readState(sharedSet)
+        //Toast.makeText(this, "Код темы ${stateG}",Toast.LENGTH_LONG).show()
+        if(stateG == 2){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            cont.setImageResource(R.drawable.control2)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            cont.setImageResource(R.drawable.control)
+        }
+
         cont.setOnClickListener {
+            var state:Int = -1
             if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
                 cont.setImageResource(R.drawable.control2)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
+                state = AppCompatDelegate.getDefaultNightMode()
+                stateSave.writeState(sharedSet,state)
             }else{
                 cont.setImageResource(R.drawable.control)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
+                state = AppCompatDelegate.getDefaultNightMode()
+                stateSave.writeState(sharedSet,state)
             }
         }
 
@@ -84,6 +103,16 @@ class SettingActivity : AppCompatActivity() {
                 startActivity(this)
             }
         }
+    }
+    private fun readState(sharedPreferences: SharedPreferences): Int { // функция выгрузки из sharedPreferences служебная
+        val json = sharedPreferences.getInt(SETTING_SAVE, -1)
+        return json
+    }
+
+    private fun writeState(sharedPreferences: SharedPreferences, state:Int) { // функция сохранения в sharedPreferences служебная
+        sharedPreferences.edit()
+            .putInt(SETTING_SAVE, state)
+            .apply()
     }
 
 }

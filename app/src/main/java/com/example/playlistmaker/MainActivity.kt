@@ -16,20 +16,20 @@ data class Buffer(
 ) : Serializable
 
 class MainActivity : AppCompatActivity() {
-    val stateSave = StateSaveClass()
+    val stateSave = AppState()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val sharedSet = getSharedPreferences(SETTING_SAVE, MODE_PRIVATE)
         var stateG = stateSave.readState(sharedSet)
-        //Toast.makeText(this, "Код темы ${stateG}",Toast.LENGTH_LONG).show()
-        if(stateG == 2){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
+        if(stateG == NIGHT_CONST){
+
+            stateSave.setNightMode()
         }else{
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+            stateSave.setLightMode()
         }
 
         val findButton = findViewById<Button>(R.id.find)

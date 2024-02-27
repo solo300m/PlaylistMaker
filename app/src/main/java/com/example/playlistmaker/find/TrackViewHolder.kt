@@ -43,7 +43,7 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
         card.setOnClickListener { // обработка события Click на карточки трека RecyclerView
             objectSave.onFindToTrack(trackId.toLong())
             val tmp = objectSave.trackTmp[0]
-            //Toast.makeText(view.context,"Выбран трек с ID ${tmp.trackId}", Toast.LENGTH_LONG).show()
+
             objectSave.addTrackToList(tmp)
 
         }

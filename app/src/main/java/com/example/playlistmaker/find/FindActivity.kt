@@ -81,7 +81,7 @@ class FindActivity : AppCompatActivity() {
         place_500 = findViewById(R.id.placeholder_500)
         updateButton = findViewById(R.id.updateButton)
         findButton = findViewById(R.id.backFindToMain)
-        //recyclerBlock = findViewById(R.id.recycleBlock)
+
 
 
         findButton.setOnClickListener {
@@ -144,9 +144,7 @@ class FindActivity : AppCompatActivity() {
                 titleFind.visibility = View.GONE //выключение заголовка "Вы искали"
                 clearButtonFind.visibility = View.GONE //Выключение кнопки "Очистка списка"
 
-                /*Log.d("MYAPPLOG", "Завершен ввод в строку поиска. Введенное значение ${input}")
-                Toast.makeText(applicationContext, "Выбран для поиска ${input}", Toast.LENGTH_LONG)
-                    .show()*/
+
                 onFindToInternet()
                 true
             }
@@ -208,23 +206,19 @@ class FindActivity : AppCompatActivity() {
 
                         }
                         if (tracks.isEmpty()) {
-                            /*Toast.makeText(
-                                applicationContext,
-                                R.string.what_go_wrong,
-                                Toast.LENGTH_LONG
-                            ).show()*/
+
                             place_200.visibility = View.VISIBLE
                         }
                     } else {
                         val code = response.code()
                         val tmp = "" + R.string.error_of_server + " ${code}"
-                        //Toast.makeText(applicationContext, tmp, Toast.LENGTH_LONG).show()
+
                         place_500.visibility = View.VISIBLE
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    //Toast.makeText(applicationContext, R.string.to_wrong, Toast.LENGTH_LONG).show()
+
                     place_500.visibility = View.VISIBLE
                 }
             })

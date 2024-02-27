@@ -4,10 +4,10 @@
     <style name="SearchBar" parent="@android:style/Widget.EditText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/smoke_gray</item>
+        <!--<item name="android:background">@color/smoke_gray</item>-->
         <item name="cornerRadius">@dimen/padding_horiz_main</item>
         <item name="android:textSize">@dimen/text_size_16</item>
-        <item name="android:padding">@dimen/size_7</item>
+        <!--<item name="android:padding">@dimen/size_7</item>-->
         <item name="android:textColor">@color/deep_gray</item>
         <item name="android:textColorHint">@color/deep_gray</item>
         <!--<item name="android:layout_marginHorizontal">@dimen/size_16</item>-->

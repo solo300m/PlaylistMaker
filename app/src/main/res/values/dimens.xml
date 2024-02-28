@@ -26,4 +26,5 @@
     <dimen name="text_size_8">8sp</dimen>
     <dimen name="text_size_11">11sp</dimen>
     <dimen name="text_size_19">19sp</dimen>
+    <dimen name="size_2">2dp</dimen>
 </resources>

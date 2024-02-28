@@ -37,6 +37,7 @@ class FindActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var clearBtn: ImageView
     private lateinit var recyclerView: RecyclerView
+
     //private lateinit var recyclerBlock: LinearLayout
     private lateinit var findButton: ImageView
     private lateinit var place_200: LinearLayout
@@ -56,23 +57,25 @@ class FindActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val trackService = retrofit.create(IMDbApi::class.java)
-    private val findVM:FindViewModel by lazy{
+    private val findVM: FindViewModel by lazy {
         ViewModelProvider(this).get(FindViewModel::class.java)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
 
         titleFind = findViewById(R.id.titleFind)
         clearButtonFind = findViewById(R.id.clearFind)
-        val sharedPref = getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)//инициация SharedPreferences
+        val sharedPref =
+            getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)//инициация SharedPreferences
         loadList(sharedPref) // загрузка сохраненного списка из sharedPreferences
         if (trackList.isNotEmpty()) {
             tracks.clear()
             tracks.addAll(trackList.reversed())// загрузка сохраненного списка из sharedPreferences в реверсивном виде
             titleFind.visibility = View.VISIBLE // включение видимости заголовка "Вы искали"
             clearButtonFind.visibility = View.VISIBLE //кнопка "Очистить список" видимость true
-        }else{
+        } else {
             titleFind.visibility = View.GONE // Выключение заголовка
             clearButtonFind.visibility = View.GONE //Выключение списка
         }
@@ -102,8 +105,10 @@ class FindActivity : AppCompatActivity() {
         clearBtn = findViewById(R.id.clearIcon)
 
         clearBtn.setOnClickListener {
-            titleFind.visibility = View.VISIBLE
-            clearButtonFind.visibility = View.VISIBLE
+            if (!trackList.isEmpty()) {
+                titleFind.visibility = View.VISIBLE
+                clearButtonFind.visibility = View.VISIBLE
+            }
             editText.setText("")
             tracks.clear()
             writeList(sharedPref) //сохранение списка в sharedPreferences
@@ -181,7 +186,10 @@ class FindActivity : AppCompatActivity() {
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 
-    private fun write(sharedPreferences: SharedPreferences, tracksList: List<Track>) { // функция сохранения в sharedPreferences служебная
+    private fun write(
+        sharedPreferences: SharedPreferences,
+        tracksList: List<Track>
+    ) { // функция сохранения в sharedPreferences служебная
         val json = Gson().toJson(tracksList)
         sharedPreferences.edit()
             .putString(TRACK_LIST_KEY, json)

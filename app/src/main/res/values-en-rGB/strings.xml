@@ -14,4 +14,7 @@
     <string name="support">Support</string>
     <string name="terms">Terms of use</string>
     <string name="find_string">Find</string>
+    <string name="update">Update</string>
+    <string name="titleFind">You searched for</string>
+    <string name="clearFindHistory">Clear history</string>
 </resources>

@@ -1,31 +1,53 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.find.FindActivity
+import com.example.playlistmaker.find.TRACK_LIST_KEY
+import com.example.playlistmaker.find.Track
+import com.google.gson.Gson
 
+const val NIGHT_CONST:Int = 2
 
 class SettingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        val stateSave = AppState()
+        val sharedSet = getSharedPreferences(SETTING_SAVE, MODE_PRIVATE)
+        val cont = findViewById<ImageView>(R.id.control)
+        var stateG = stateSave.readState(sharedSet)
 
-        val control = findViewById<ImageView>(R.id.control)
-        control.setOnClickListener {
+        if(stateG == NIGHT_CONST){
+            stateSave.setNightMode()
+
+            cont.setImageResource(R.drawable.control2)
+        }else{
+            stateSave.setLightMode()
+
+            cont.setImageResource(R.drawable.control)
+        }
+
+        cont.setOnClickListener {
+
             if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
-                control.setImageResource(R.drawable.control2)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                cont.setImageResource(R.drawable.control2)
+                stateSave.setNightMode()
 
+                stateSave.writeState(sharedSet,AppCompatDelegate.getDefaultNightMode())
             }else{
-                control.setImageResource(R.drawable.control)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                cont.setImageResource(R.drawable.control)
+                stateSave.setLightMode()
 
+                stateSave.writeState(sharedSet,AppCompatDelegate.getDefaultNightMode())
             }
         }
 
@@ -45,8 +67,7 @@ class SettingActivity : AppCompatActivity() {
 
         val homeButton = findViewById<ImageView>(R.id.backSettingToMain)
         homeButton.setOnClickListener {
-            /*val intent2 = Intent(this, MainActivity::class.java)
-            startActivity(intent2)*/
+
             finish()
         }
         val sareButton = findViewById<ImageView>(R.id.sareButton);
@@ -75,15 +96,13 @@ class SettingActivity : AppCompatActivity() {
         }
         val termsButton = findViewById<ImageView>(R.id.termsButton)
         termsButton.setOnClickListener {
-            /*val intent:Intent = Uri.parse("https://yandex.ru/legal/practicum_offer/").let{
-                webpage -> Intent(Intent.ACTION_VIEW, webpage)
-            }
-           startActivity(intent)*/
+
             Intent(Intent.ACTION_VIEW).apply {
                 Uri.parse(resources.getString(R.string.yandexText))
                 startActivity(this)
             }
         }
     }
+
 
 }

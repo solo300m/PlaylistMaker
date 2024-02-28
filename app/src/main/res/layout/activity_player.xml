@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/size_16"
+    tools:context=".player.PlayerActivity">
+    <ImageView
+        android:id="@+id/backPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/left"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/size_24"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/backPlayer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/titleContain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Название композиции"
+            app:layout_constraintStart_toStartOf="@id/viewContainer"
+            app:layout_constraintEnd_toEndOf="@id/viewContainer"
+            app:layout_constraintTop_toTopOf="@id/viewContainer"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginVertical="@dimen/size_8"
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/titleContain"
+            tools:src="@drawable/barsik"
+            android:padding="@dimen/size_16"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

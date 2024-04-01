@@ -16,21 +16,11 @@ data class Buffer(
 ) : Serializable
 
 class MainActivity : AppCompatActivity() {
-    val stateSave = AppState()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sharedSet = getSharedPreferences(SETTING_SAVE, MODE_PRIVATE)
-        var stateG = stateSave.readState(sharedSet)
-
-        if(stateG == NIGHT_CONST){
-
-            stateSave.setNightMode()
-        }else{
-
-            stateSave.setLightMode()
-        }
 
         val findButton = findViewById<Button>(R.id.find)
         val mTeka = findViewById<Button>(R.id.mediateka)

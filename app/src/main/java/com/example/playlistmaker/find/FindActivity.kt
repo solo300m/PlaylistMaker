@@ -205,11 +205,12 @@ class FindActivity : AppCompatActivity() {
                 ) {
                     if (response.code() == 200) {
                         tracks.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
+                        val resp = response.body()?.results;
+                        if (resp?.isNotEmpty() == true) {
                             if (place_500.visibility == View.VISIBLE) {
                                 place_500.visibility = View.GONE
                             }
-                            tracks.addAll(response.body()?.results!!)
+                            tracks.addAll(resp!!)
                             recyclerView.adapter?.notifyDataSetChanged()
 
                         }

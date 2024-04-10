@@ -1,12 +1,11 @@
 package com.example.playlistmaker.find
 
-import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 
 import android.view.inputmethod.EditorInfo
@@ -18,13 +17,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.player.PlayerActivity2
 import com.google.gson.Gson
 
 import retrofit2.Call
@@ -33,7 +30,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class FindActivity : AppCompatActivity() {
+class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private lateinit var editText: EditText
     private lateinit var clearBtn: ImageView
     private lateinit var recyclerView: RecyclerView
@@ -45,9 +42,9 @@ class FindActivity : AppCompatActivity() {
     private lateinit var updateButton: Button
     private lateinit var titleFind: TextView//заголовок сохраненного списка
     private lateinit var clearButtonFind: Button//кнопка очистки списка сохраненных треков
+    private var objectSave = TrackPreferences()
 
-
-    private val adapter = TrackAdapter(tracks)
+    private val adapter = TrackAdapter(tracks, this)
 
     private var input: String? = null
 
@@ -264,5 +261,34 @@ class FindActivity : AppCompatActivity() {
         var trackList: MutableList<Track> = mutableListOf()
         const val tracBaseURL = "https://itunes.apple.com"
         private const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
+        var currentTrack: Track? = null;
+    }
+
+    override fun onClick(track: Track) { // обработчик нажатия на запись в списке треков
+        val sharedPref =
+            getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)//инициация SharedPreferences
+        objectSave.onFindToTrack(track.trackId.toLong())
+        currentTrack = track;
+        val tmp = objectSave.trackTmp[0]
+        objectSave.addTrackToList(tmp)
+
+
+        val intent = Intent(this, PlayerActivity2::class.java)
+        //val intent = Intent(this, PlayerActivity::class.java)
+        if (track != null) {
+            intent.putExtra("trackName", track.trackName)
+            intent.putExtra("trackPicture", track.artworkUrl100)
+            intent.putExtra("nameSinger", track.artistName)
+            intent.putExtra("longTime", track.trackTimeMillis)
+            intent.putExtra("album", track.primaryGenreName)
+        }
+        startActivity(intent)
+        if (trackList.isNotEmpty()) {
+            //tracks.clear()
+            //tracks.addAll(trackList.reversed())
+            writeList(sharedPref) //сохранение списка в sharedPreferences
+            loadList(sharedPref) //загрузка из sharedPreferences
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
     }
 }

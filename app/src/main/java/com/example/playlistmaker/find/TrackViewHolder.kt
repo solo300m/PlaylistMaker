@@ -1,12 +1,10 @@
 package com.example.playlistmaker.find
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,11 +16,12 @@ import java.util.Locale
 import kotlin.properties.Delegates
 
 
-class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
+class TrackViewHolder(parentView: View, listener:Listener) : RecyclerView.ViewHolder(parentView) {
     private val trackName: TextView
     private val authorTrace: TextView
     private val timeTrack: TextView
     private val pictureTrack: ImageView
+    private val buttonRight:ImageView
     private val card: ConstraintLayout
     private val view: View
     private var trackId by Delegates.notNull<Long>()
@@ -38,15 +37,23 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
         timeTrack = parentView.findViewById(R.id.timeTrack)
         pictureTrack = parentView.findViewById(R.id.picture)
         card = parentView.findViewById(R.id.cardTrack)
+        buttonRight = parentView.findViewById(R.id.right)//кнопка стрелка вправо на карточке каждого трека
         view = parentView
 
         card.setOnClickListener { // обработка события Click на карточки трека RecyclerView
-            objectSave.onFindToTrack(trackId.toLong())
+            val track = objectSave.getTrack(trackId.toLong())
+            if (track != null) {
+                listener.onClick(track)
+            }
+            /*objectSave.onFindToTrack(trackId.toLong())
+
+            val track = objectSave.getTrack(trackId.toLong())
+            Toast.makeText(parentView.context,"Выбран трак с ID: ${track?.trackId}",Toast.LENGTH_LONG).show()
+            currentTrack = track;
             val tmp = objectSave.trackTmp[0]
-
-            objectSave.addTrackToList(tmp)
-
+            objectSave.addTrackToList(tmp)*/
         }
+
     }
     private fun dpToPx(dp: Float, context: Context): Int {
         return TypedValue.applyDimension(
@@ -56,7 +63,7 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
     }
     private val tmp: Int = dpToPx(2f, itemView.context)
 
-    fun bind(model: Track) {
+    fun bind(model: Track, listener:Listener) {
         trackId = model.trackId
         trackName.text = model.trackName
         authorTrace.text = model.artistName
@@ -67,5 +74,9 @@ class TrackViewHolder(parentView: View) : RecyclerView.ViewHolder(parentView) {
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(tmp))
             .into(pictureTrack)
+    }
+
+    interface Listener{
+        fun onClick(track: Track)
     }
 }

@@ -17,4 +17,10 @@
     <string name="update">Update</string>
     <string name="titleFind">You searched for</string>
     <string name="clearFindHistory">Clear history</string>
+    <string name="nameLongTime">LongTime</string>
+    <string name="nameAlbum">Album</string>
+    <string name="nameYear">Year</string>
+    <string name="nameGenre">Genre</string>
+    <string name="nameCountry">Country</string>
+    <string name="country">UK</string>
 </resources>

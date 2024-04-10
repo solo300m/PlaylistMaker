@@ -44,15 +44,24 @@ class TrackPreferences { // класс для обработки операци�
     }
 
     fun onFindToTrack(input: Long) { // поиск трека по клику на позиции в RecyclerView
+        if(trackTmp.isNotEmpty()){
+            trackTmp.clear()
+        }
         if (input != 0L && !tracks.isEmpty()) {
 
             val findTrack = tracks.find {it.trackId == input}
             if(findTrack?.trackId == input)
                 trackTmp.add(findTrack)
         }
+    }
 
-
-
+    fun getTrack(input:Long):Track?{
+        val track = tracks.find { it.trackId == input }
+        if(track != null) {
+                return track
+            }else{
+                return null
+            }
     }
 
 }

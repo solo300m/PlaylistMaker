@@ -25,4 +25,17 @@
     <string name="update">Обновить</string>
     <string name="titleFind">Вы искали</string>
     <string name="clearFindHistory">Очистить историю</string>
+    <string name="nameSound" translatable="false">Yesterday (Remastered 2009)</string>
+    <string name="nameSinger" translatable="false">The Beatles</string>
+    <string name="currentTime" translatable="false">0:30</string>
+    <string name="nameLongTime">Длительность</string>
+    <string name="longTime" translatable="false">5:30</string>
+    <string name="nameAlbum">Альбом</string>
+    <string name="album" translatable="false">Yesterday (Remastered 2009)</string>
+    <string name="nameYear">Год</string>
+    <string name="year" translatable="false">1965</string>
+    <string name="nameGenre">Жанр</string>
+    <string name="genre" translatable="false">Rock</string>
+    <string name="nameCountry">Страна</string>
+    <string name="country">Великобритания</string>
 </resources>

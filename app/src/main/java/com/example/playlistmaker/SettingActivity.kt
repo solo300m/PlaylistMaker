@@ -14,7 +14,7 @@ import com.example.playlistmaker.find.TRACK_LIST_KEY
 import com.example.playlistmaker.find.Track
 import com.google.gson.Gson
 
-const val NIGHT_CONST:Int = 2
+const val NIGHT_CONST: Int = 2
 
 class SettingActivity : AppCompatActivity() {
 
@@ -26,11 +26,11 @@ class SettingActivity : AppCompatActivity() {
         val cont = findViewById<ImageView>(R.id.control)
         var stateG = stateSave.readState(sharedSet)
 
-        if(stateG == NIGHT_CONST){
+        if (stateG == NIGHT_CONST) {
             stateSave.setNightMode()
 
             cont.setImageResource(R.drawable.control2)
-        }else{
+        } else {
             stateSave.setLightMode()
 
             cont.setImageResource(R.drawable.control)
@@ -38,16 +38,16 @@ class SettingActivity : AppCompatActivity() {
 
         cont.setOnClickListener {
 
-            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
+            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
                 cont.setImageResource(R.drawable.control2)
                 stateSave.setNightMode()
 
-                stateSave.writeState(sharedSet,AppCompatDelegate.getDefaultNightMode())
-            }else{
+                stateSave.writeState(sharedSet, AppCompatDelegate.getDefaultNightMode())
+            } else {
                 cont.setImageResource(R.drawable.control)
                 stateSave.setLightMode()
 
-                stateSave.writeState(sharedSet,AppCompatDelegate.getDefaultNightMode())
+                stateSave.writeState(sharedSet, AppCompatDelegate.getDefaultNightMode())
             }
         }
 
@@ -75,32 +75,35 @@ class SettingActivity : AppCompatActivity() {
             val message = resources.getString(R.string.promoText)
             val sareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT,message)
-                type="text/plain"
+                putExtra(Intent.EXTRA_TEXT, message)
+                type = "text/plain"
             }
             startActivity(sareIntent)
         }
         val supButton = findViewById<ImageView>(R.id.supportButton)
         supButton.setOnClickListener {
 
-            val title:String = resources.getString(R.string.titleEmailTest)
-            val substr:String = resources.getString(R.string.subjectTest)
-            Intent(Intent.ACTION_SEND).apply {
-                type="text/plain"
-                putExtra(Intent.EXTRA_EMAIL, arrayOf("solo300m@yandex.ru"))
-                putExtra(Intent.EXTRA_SUBJECT, title)
-                putExtra(Intent.EXTRA_TEXT, substr)
-                startActivity(this)
-            }
+            val title: String = resources.getString(R.string.titleEmailTest)
+            val substr: String = resources.getString(R.string.subjectTest)
+            val intSend = Intent(Intent.ACTION_SENDTO)
+                intSend.data = Uri.parse("mailto:")
+                //intSend.type = "text/plain"
+                intSend.putExtra(Intent.EXTRA_EMAIL, arrayOf("solo300m@yandex.ru"))
+                intSend.putExtra(Intent.EXTRA_SUBJECT, title)
+                intSend.putExtra(Intent.EXTRA_TEXT, substr)
+
+            startActivity(intSend)
 
         }
         val termsButton = findViewById<ImageView>(R.id.termsButton)
         termsButton.setOnClickListener {
-
-            Intent(Intent.ACTION_VIEW).apply {
+            val intentContent = Intent(Intent.ACTION_VIEW,
+            Uri.parse(resources.getString(R.string.yandexText)))
+            /*Intent(Intent.ACTION_VIEW).apply {
                 Uri.parse(resources.getString(R.string.yandexText))
                 startActivity(this)
-            }
+            }*/
+            startActivity(intentContent)
         }
     }
 

@@ -9,7 +9,7 @@
         <item name="android:textSize">@dimen/text_size_16</item>
         <!--<item name="android:padding">@dimen/size_7</item>-->
         <item name="android:textColor">@color/deepest_blue</item>
-        <item name="android:textColorHint">@color/deep_gray</item>
+        <item name="android:textColorHint">?attr/colorSurfaceVariant</item>
         <!--<item name="android:layout_marginHorizontal">@dimen/size_16</item>-->
         <item name="android:layout_marginVertical">@dimen/size_8</item>
         <item name="android:maxLines">1</item>

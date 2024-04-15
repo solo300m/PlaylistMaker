@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +43,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private lateinit var updateButton: Button
     private lateinit var titleFind: TextView//заголовок сохраненного списка
     private lateinit var clearButtonFind: Button//кнопка очистки списка сохраненных треков
+    private lateinit var findList:RecyclerView //список - результат поиска
     private var objectSave = TrackPreferences()
 
     private val adapter = TrackAdapter(tracks, this)
@@ -81,7 +83,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         place_500 = findViewById(R.id.placeholder_500)
         updateButton = findViewById(R.id.updateButton)
         findButton = findViewById(R.id.backFindToMain)
-
+        findList = findViewById(R.id.findList)
 
 
         findButton.setOnClickListener {
@@ -102,19 +104,23 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         clearBtn = findViewById(R.id.clearIcon)
 
         clearBtn.setOnClickListener {
-            if (!trackList.isEmpty()) {
+            /*if (!trackList.isEmpty()) {
                 titleFind.visibility = View.VISIBLE
                 clearButtonFind.visibility = View.VISIBLE
-            }
+            }*/
             editText.setText("")
             tracks.clear()
             writeList(sharedPref) //сохранение списка в sharedPreferences
             loadList(sharedPref) //загрузка из sharedPreferences
             if (trackList.isNotEmpty()) {
                 tracks.addAll(trackList.reversed()) //reversed для обеспечения первой позиции последней запрошенной записи
+                titleFind.visibility = View.VISIBLE
+                findList.visibility = View.VISIBLE
+                clearButtonFind.visibility = View.VISIBLE
             }
             recyclerView.adapter?.notifyDataSetChanged()
             place_200.visibility = View.GONE
+            place_500.visibility = View.GONE
 
             val view = this.currentFocus
             val inputMethodManager =
@@ -212,20 +218,41 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
 
                         }
                         if (tracks.isEmpty()) {
-
+                            findList.visibility = View.GONE
                             place_200.visibility = View.VISIBLE
+                        }else{
+                            if(tracks.isEmpty() && trackList.isNotEmpty()){
+                                tracks.addAll(trackList.reversed())
+                                findList.visibility = View.VISIBLE
+                                place_200.visibility = View.GONE
+                            }else if(tracks.isNotEmpty()){
+                                findList.visibility = View.VISIBLE
+                                place_200.visibility = View.GONE
+                            }else if(tracks.isEmpty() && trackList.isEmpty()){
+                                findList.visibility = View.VISIBLE
+                                place_200.visibility = View.GONE
+                            }
+
                         }
                     } else {
                         val code = response.code()
                         val tmp = "" + R.string.error_of_server + " ${code}"
-
-                        place_500.visibility = View.VISIBLE
+                        if(place_200.isVisible || findList.isVisible) {
+                            place_500.visibility = View.VISIBLE
+                            place_200.visibility = View.GONE
+                            findList.visibility = View.GONE
+                            titleFind.visibility = View.GONE // включение видимости заголовка "Вы искали"
+                            clearButtonFind.visibility = View.GONE //кнопка "Очистить список" видимость true
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-
+                    place_200.visibility = View.GONE
+                    findList.visibility = View.GONE
                     place_500.visibility = View.VISIBLE
+                    titleFind.visibility = View.GONE // включение видимости заголовка "Вы искали"
+                    clearButtonFind.visibility = View.GONE //кнопка "Очистить список" видимость true
                 }
             })
         }

@@ -69,6 +69,10 @@
         android:id="@+id/nameSouth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginTop="@dimen/size_24"
         android:fontFamily="@font/ys_display_medium"
         android:text="@string/nameSound"
@@ -76,6 +80,7 @@
         android:textSize="@dimen/text_size_22"
         app:layout_constraintStart_toEndOf="@id/leftBoarder"
         app:layout_constraintTop_toBottomOf="@id/albumPicture"
+        app:layout_constraintEnd_toStartOf="@id/reghtBoarder"
         app:layout_constraintVertical_weight="1" />
 
     <TextView

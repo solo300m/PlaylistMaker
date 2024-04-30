@@ -308,6 +308,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             intent.putExtra("nameSinger", track.artistName)
             intent.putExtra("longTime", track.trackTimeMillis)
             intent.putExtra("album", track.primaryGenreName)
+            intent.putExtra("url", track.previewUrl)
         }
         startActivity(intent)
         if (trackList.isNotEmpty()) {

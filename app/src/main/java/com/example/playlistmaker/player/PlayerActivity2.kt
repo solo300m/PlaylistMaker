@@ -1,6 +1,8 @@
 package com.example.playlistmaker.player
 
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,6 +30,11 @@ class PlayerActivity2 : AppCompatActivity() {
     private lateinit var longTime: TextView
     private lateinit var album: TextView
     private lateinit var nameAlbum: TextView
+    private lateinit var playButton: ImageView
+    private lateinit var previewUrl: String
+
+    private var mediaPlayer = MediaPlayer()
+    private var playerState = STATE_DEFAULT
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
@@ -39,6 +46,8 @@ class PlayerActivity2 : AppCompatActivity() {
         var singerName = intent.getStringExtra("nameSinger")
         var longTimeT = intent.getLongExtra("longTime", 0L)
         var albumT = intent.getStringExtra("album")
+        previewUrl = intent.getStringExtra("url").toString()
+        //Toast.makeText(this,"URL: ${previewUrl}",Toast.LENGTH_LONG).show()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
@@ -81,6 +90,54 @@ class PlayerActivity2 : AppCompatActivity() {
             album.visibility = View.GONE
             nameAlbum.visibility = View.GONE
         }
+
+        playButton = findViewById(R.id.PlayButton)
+        preparePlayer()
+        playButton.setOnClickListener {
+            playbackControl()
+        }
+    }
+
+    private fun preparePlayer(){
+        mediaPlayer.setDataSource(previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener{
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playButton.setImageResource(R.drawable.playbutton)
+            playerState = STATE_PREPARED
+        }
+    }
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+    private fun startPlayer(){
+        mediaPlayer.start()
+        playButton.setImageResource(R.drawable.pause)
+        playerState = STATE_PLAYING
+    }
+    private fun pausePlayer(){
+        mediaPlayer.pause()
+        playButton.setImageResource(R.drawable.playbutton)
+        playerState = STATE_PAUSED
     }
 
     private fun dpToPx(dp: Float, context: Context): Int {
@@ -113,5 +170,12 @@ class PlayerActivity2 : AppCompatActivity() {
 
     private fun change512(str: String, strTo: String): String {
         return str.substringBeforeLast('/') + strTo
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
     }
 }

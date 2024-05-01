@@ -104,7 +104,6 @@ class PlayerActivity2 : AppCompatActivity() {
         preparePlayer()
         playButton.setOnClickListener {
             playbackControl()
-
         }
         currTime = findViewById(R.id.currentTimePlay)
     }
@@ -114,7 +113,7 @@ class PlayerActivity2 : AppCompatActivity() {
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener{
             playerState = STATE_PREPARED
-            currentTime = mediaPlayer.currentPosition
+            currentTime = 0
             currTime.text = dateFormat.format(currentTime)
         }
         mediaPlayer.setOnCompletionListener {
@@ -137,8 +136,6 @@ class PlayerActivity2 : AppCompatActivity() {
     private fun playbackControl() {
         when(playerState) {
             STATE_PLAYING -> {
-                currentTime = mediaPlayer.currentPosition
-                timeSet(currentTime!!)
                 pausePlayer()
             }
             STATE_PREPARED, STATE_PAUSED -> {
@@ -146,21 +143,21 @@ class PlayerActivity2 : AppCompatActivity() {
             }
         }
     }
-    private fun timeSet(currentTime:Int){
+    private fun timeSet(){
         handler?.post (
-            createUpdateTime(currentTime)
+            createUpdateTime()
                 )
     }
 
-    private fun createUpdateTime(currentTime: Int): Runnable {
+    private fun createUpdateTime(): Runnable {
         return object : Runnable{
             override fun run() {
-                if (playerState == STATE_PLAYING){
-                    val seconds = currentTime
+                val currentLocalTime = mediaPlayer.currentPosition
+                if (playerState == STATE_PLAYING && currentLocalTime >= 0){
+                    val seconds = currentLocalTime!!
                     currTime.text = dateFormat.format(seconds)
                     handler?.postDelayed(this, DELAY)
                 }else{
-                    currTime.text = dateFormat.format(currentTime)
                     handler?.removeCallbacks(this)
                 }
             }
@@ -171,14 +168,12 @@ class PlayerActivity2 : AppCompatActivity() {
         mediaPlayer.start()
         playButton.setImageResource(R.drawable.pause)
         playerState = STATE_PLAYING
-//        currentTime = mediaPlayer.currentPosition
-//        timeSet(currentTime!!)
+        timeSet()
     }
     private fun pausePlayer(){
+
         mediaPlayer.pause()
         playButton.setImageResource(R.drawable.playbutton)
-        currentTime = mediaPlayer.currentPosition
-        currTime.text = dateFormat.format(currentTime)
         playerState = STATE_PAUSED
     }
 

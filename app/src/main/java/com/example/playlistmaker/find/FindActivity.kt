@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -14,6 +16,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +39,6 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private lateinit var clearBtn: ImageView
     private lateinit var recyclerView: RecyclerView
 
-    //private lateinit var recyclerBlock: LinearLayout
     private lateinit var findButton: ImageView
     private lateinit var place_200: LinearLayout
     private lateinit var place_500: LinearLayout
@@ -44,6 +46,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private lateinit var titleFind: TextView//заголовок сохраненного списка
     private lateinit var clearButtonFind: Button//кнопка очистки списка сохраненных треков
     private lateinit var findList:RecyclerView //список - результат поиска
+    private lateinit var progressBar:ProgressBar // виджет ProgressBar
     private var objectSave = TrackPreferences()
 
     private val adapter = TrackAdapter(tracks, this)
@@ -59,10 +62,23 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private val findVM: FindViewModel by lazy {
         ViewModelProvider(this).get(FindViewModel::class.java)
     }
+    private val searchRunnable = Runnable{onFindToInternet()} // Runnable объект для debonce поисковой строки
+    private val handlerFind = Handler(Looper.getMainLooper()) // Handler главного IU потока
+    companion object {
+        val tracks = ArrayList<Track>()
+        var trackList: MutableList<Track> = mutableListOf()
+        const val tracBaseURL = "https://itunes.apple.com"
+        private const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
+        var currentTrack: Track? = null;
+        private const val SEARCH_DELAY = 2000L
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
+
+        progressBar = findViewById(R.id.progressBar)
 
         titleFind = findViewById(R.id.titleFind)
         clearButtonFind = findViewById(R.id.clearFind)
@@ -98,16 +114,12 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         }
 
         editText = findViewById<EditText>(R.id.searchField)
-        // val linLayout = findViewById<LinearLayout>(R.id.editContainer)
 
 
         clearBtn = findViewById(R.id.clearIcon)
 
         clearBtn.setOnClickListener {
-            /*if (!trackList.isEmpty()) {
-                titleFind.visibility = View.VISIBLE
-                clearButtonFind.visibility = View.VISIBLE
-            }*/
+
             editText.setText("")
             tracks.clear()
             writeList(sharedPref) //сохранение списка в sharedPreferences
@@ -139,6 +151,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                 if (!s.isNullOrEmpty()) {
                     input = s.toString()
                 }
+                searchDebounce()
                 clearBtn.visibility = clearButtonVisibility(s)
             }
 
@@ -147,17 +160,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             }
         }
         editText.addTextChangedListener(simpleTextWatcher)
-        editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                titleFind.visibility = View.GONE //выключение заголовка "Вы искали"
-                clearButtonFind.visibility = View.GONE //Выключение кнопки "Очистка списка"
 
-
-                onFindToInternet()
-                true
-            }
-            false
-        }
         recyclerView = findViewById(R.id.findList)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
@@ -166,6 +169,12 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             onFindToInternet()
         }
 
+    }
+
+    private fun searchDebounce(){
+        progressBar.visibility = View.VISIBLE
+        handlerFind.removeCallbacks(searchRunnable)
+        handlerFind.postDelayed(searchRunnable, SEARCH_DELAY)
     }
 
     private fun clearTrackList(sharedPreferences: SharedPreferences) {
@@ -206,6 +215,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+                    progressBar.visibility = View.GONE
                     if (response.code() == 200) {
                         tracks.clear()
                         val resp = response.body()?.results;
@@ -248,6 +258,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    progressBar.visibility = View.GONE
                     place_200.visibility = View.GONE
                     findList.visibility = View.GONE
                     place_500.visibility = View.VISIBLE
@@ -283,13 +294,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         }
     }
 
-    companion object {
-        val tracks = ArrayList<Track>()
-        var trackList: MutableList<Track> = mutableListOf()
-        const val tracBaseURL = "https://itunes.apple.com"
-        private const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
-        var currentTrack: Track? = null;
-    }
+
 
     override fun onClick(track: Track) { // обработчик нажатия на запись в списке треков
         val sharedPref =

@@ -27,7 +27,7 @@
     <string name="clearFindHistory">Очистить историю</string>
     <string name="nameSound" translatable="false">Yesterday (Remastered 2009)</string>
     <string name="nameSinger" translatable="false">The Beatles</string>
-    <string name="currentTime" translatable="false">0:30</string>
+    <string name="currentTime" translatable="false">00 : 00</string>
     <string name="nameLongTime">Длительность</string>
     <string name="longTime" translatable="false">5:30</string>
     <string name="nameAlbum">Альбом</string>

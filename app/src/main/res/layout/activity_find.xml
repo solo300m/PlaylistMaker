@@ -8,6 +8,18 @@
     android:layout_height="match_parent"
     tools:context=".find.FindActivity"
     android:orientation="vertical">
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/size_44"
+        android:layout_height="@dimen/size_44"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.4"
+        android:indeterminateTint="@color/blue_blue_1"
+        android:visibility="gone"
+        />
     <LinearLayout
         android:id="@+id/titleBlock"
         app:layout_constraintTop_toTopOf="parent"

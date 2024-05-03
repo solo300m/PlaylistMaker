@@ -88,11 +88,13 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         if (trackList.isNotEmpty()) {
             tracks.clear()
             tracks.addAll(trackList.reversed())// загрузка сохраненного списка из sharedPreferences в реверсивном виде
-            titleFind.visibility = View.VISIBLE // включение видимости заголовка "Вы искали"
-            clearButtonFind.visibility = View.VISIBLE //кнопка "Очистить список" видимость true
+//            titleFind.visibility = View.VISIBLE // включение видимости заголовка "Вы искали"
+//            clearButtonFind.visibility = View.VISIBLE //кнопка "Очистить список" видимость true
+            onTitleAndButton()
         } else {
-            titleFind.visibility = View.GONE // Выключение заголовка
-            clearButtonFind.visibility = View.GONE //Выключение списка
+//            titleFind.visibility = View.GONE // Выключение заголовка
+//            clearButtonFind.visibility = View.GONE //Выключение списка
+            offTitleAndButton()
         }
 
         place_200 = findViewById(R.id.placeholder_200)
@@ -108,8 +110,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
 
         clearButtonFind.setOnClickListener {//обработчик кнопки "Очистка списка"
             clearTrackList(sharedPref)
-            titleFind.visibility = View.GONE
-            clearButtonFind.visibility = View.GONE
+            offTitleAndButton()
             recyclerView.adapter?.notifyDataSetChanged()
         }
 
@@ -121,14 +122,16 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         clearBtn.setOnClickListener {
 
             editText.setText("")
+            input = ""
             tracks.clear()
             writeList(sharedPref) //сохранение списка в sharedPreferences
             loadList(sharedPref) //загрузка из sharedPreferences
             if (trackList.isNotEmpty()) {
                 tracks.addAll(trackList.reversed()) //reversed для обеспечения первой позиции последней запрошенной записи
-                titleFind.visibility = View.VISIBLE
+//                titleFind.visibility = View.VISIBLE
                 findList.visibility = View.VISIBLE
-                clearButtonFind.visibility = View.VISIBLE
+//                clearButtonFind.visibility = View.VISIBLE
+                onTitleAndButton()
             }
             recyclerView.adapter?.notifyDataSetChanged()
             place_200.visibility = View.GONE
@@ -150,8 +153,10 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty()) {
                     input = s.toString()
+                    offTitleAndButton()
+                    searchDebounce()
                 }
-                searchDebounce()
+
                 clearBtn.visibility = clearButtonVisibility(s)
             }
 
@@ -209,6 +214,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     }
 
     private fun onFindToInternet() {
+        offTitleAndButton()
         if (!input.isNullOrEmpty()) {
             trackService.search(input.toString()).enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
@@ -216,6 +222,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                     response: Response<TrackResponse>
                 ) {
                     progressBar.visibility = View.GONE
+
                     if (response.code() == 200) {
                         tracks.clear()
                         val resp = response.body()?.results;
@@ -322,6 +329,18 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             writeList(sharedPref) //сохранение списка в sharedPreferences
             loadList(sharedPref) //загрузка из sharedPreferences
             recyclerView.adapter?.notifyDataSetChanged()
+        }
+    }
+    private fun offTitleAndButton(){
+        if(titleFind.isVisible){
+            titleFind.visibility = View.GONE
+            clearButtonFind.visibility = View.GONE
+        }
+    }
+    private fun onTitleAndButton(){
+        if(!titleFind.isVisible){
+            titleFind.visibility = View.VISIBLE
+            clearButtonFind.visibility = View.VISIBLE
         }
     }
 }

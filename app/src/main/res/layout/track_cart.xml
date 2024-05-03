@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         app:layout_constrainedWidth="true"
         app:layout_constraintHorizontal_bias="0.0"
+
         android:layout_marginEnd="@dimen/size_9"
         app:layout_constraintStart_toEndOf="@id/picture"
         app:layout_constraintTop_toTopOf="@id/picture"
@@ -42,14 +43,18 @@
         android:id="@+id/authorTrack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintTop_toBottomOf="@id/trackName"
         app:layout_constraintStart_toEndOf="@id/picture"
         app:layout_constraintBottom_toBottomOf="@id/picture"
+        app:layout_constraintEnd_toStartOf="@id/point"
         android:fontFamily="@font/ys_display_regular"
         tools:text="The Beatles"
         android:textColor="?attr/colorPrimarySurface"
         android:textSize="@dimen/text_size_11"
         android:layout_marginStart="@dimen/size_8"
+        app:layout_constraintHorizontal_chainStyle="packed"
         android:ellipsize="end"
         android:maxLines="1"
         />
@@ -60,16 +65,21 @@
         app:layout_constraintStart_toEndOf="@id/authorTrack"
         app:layout_constraintTop_toTopOf="@id/authorTrack"
         app:layout_constraintBottom_toBottomOf="@id/authorTrack"
+        app:layout_constraintEnd_toStartOf="@id/timeTrack"
+
+        android:layout_marginLeft="@dimen/size_3"
         android:src="@drawable/ic"
         app:tint="?attr/colorPrimarySurface" />
     <TextView
         android:id="@+id/timeTrack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:fontFamily="@font/ys_display_regular"
         app:layout_constraintStart_toEndOf="@id/point"
         app:layout_constraintTop_toTopOf="@id/authorTrack"
         app:layout_constraintBottom_toBottomOf="@id/authorTrack"
+        app:layout_constraintEnd_toStartOf="@id/right"
         tools:text="2:55"
         android:textColor="?attr/colorPrimarySurface"
         android:textSize="@dimen/text_size_11"

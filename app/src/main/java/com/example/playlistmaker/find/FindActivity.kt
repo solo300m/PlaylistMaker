@@ -88,12 +88,8 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         if (trackList.isNotEmpty()) {
             tracks.clear()
             tracks.addAll(trackList.reversed())// загрузка сохраненного списка из sharedPreferences в реверсивном виде
-//            titleFind.visibility = View.VISIBLE // включение видимости заголовка "Вы искали"
-//            clearButtonFind.visibility = View.VISIBLE //кнопка "Очистить список" видимость true
             onTitleAndButton()
         } else {
-//            titleFind.visibility = View.GONE // Выключение заголовка
-//            clearButtonFind.visibility = View.GONE //Выключение списка
             offTitleAndButton()
         }
 
@@ -128,9 +124,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             loadList(sharedPref) //загрузка из sharedPreferences
             if (trackList.isNotEmpty()) {
                 tracks.addAll(trackList.reversed()) //reversed для обеспечения первой позиции последней запрошенной записи
-//                titleFind.visibility = View.VISIBLE
                 findList.visibility = View.VISIBLE
-//                clearButtonFind.visibility = View.VISIBLE
                 onTitleAndButton()
             }
             recyclerView.adapter?.notifyDataSetChanged()

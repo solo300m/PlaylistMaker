@@ -1,18 +1,13 @@
 package com.example.playlistmaker
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.find.FindActivity
-import com.example.playlistmaker.find.TRACK_LIST_KEY
-import com.example.playlistmaker.find.Track
-import com.google.gson.Gson
+import com.example.playlistmaker.ui.find.FindActivity
 
 const val NIGHT_CONST: Int = 2
 

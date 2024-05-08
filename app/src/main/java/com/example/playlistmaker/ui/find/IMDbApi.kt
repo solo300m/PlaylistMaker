@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.ui.find
 
 import retrofit2.Call
 import retrofit2.http.GET

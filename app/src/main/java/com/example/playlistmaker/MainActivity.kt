@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.find.FindActivity
+import com.example.playlistmaker.ui.find.FindActivity
 
 import java.io.Serializable
 

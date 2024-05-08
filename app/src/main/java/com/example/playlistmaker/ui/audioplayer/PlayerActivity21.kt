@@ -1,30 +1,27 @@
-package com.example.playlistmaker.player
+package com.example.playlistmaker.ui.audioplayer
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.util.TypedValue
-import android.view.Display
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.DataService
+import com.example.playlistmaker.data.dto.ServiceMethod
+import com.example.playlistmaker.domain.api.PlayerType
+import com.example.playlistmaker.domain.impl.MediaPlayerImpl
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity2 : AppCompatActivity() {
+class PlayerActivity21 : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var nameSouth: TextView
     private lateinit var albumPicture: ImageView
@@ -36,8 +33,6 @@ class PlayerActivity2 : AppCompatActivity() {
     private lateinit var previewUrl: String
     private lateinit var currTime: TextView
 
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
 
     private var currentTime: Int? = null
 
@@ -47,6 +42,9 @@ class PlayerActivity2 : AppCompatActivity() {
 
     private var handler: Handler? = null
 
+    private var player: PlayerType = MediaPlayerImpl()
+    private val service: ServiceMethod = DataService()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         var trackName = intent.getStringExtra("trackName")
         var pictureUrl = intent.getStringExtra("trackPicture")
@@ -55,6 +53,8 @@ class PlayerActivity2 : AppCompatActivity() {
         var albumT = intent.getStringExtra("album")
         previewUrl = intent.getStringExtra("url").toString()
         //Toast.makeText(this,"URL: ${previewUrl}",Toast.LENGTH_LONG).show()
+
+        player.init(previewUrl)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
@@ -66,10 +66,9 @@ class PlayerActivity2 : AppCompatActivity() {
             finish()
         }
 
-        val pictureUrl_512 = change512(pictureUrl.toString(), "/512x512bb.jpg")
-        //Toast.makeText(this, "${pictureUrl_512}", Toast.LENGTH_LONG).show()
+        val pictureUrl_512 = service.change512(pictureUrl.toString(), "/512x512bb.jpg")
         albumPicture = findViewById(R.id.albumPicture)
-        val tmp: Int = dpToPx(8f, this)
+        val tmp: Int = service.dpToPx(8f, this)
         Glide
             .with(this)
             .load(pictureUrl_512)
@@ -91,122 +90,57 @@ class PlayerActivity2 : AppCompatActivity() {
         nameAlbum = findViewById(R.id.nameAlbum)
         if (!albumT.isNullOrEmpty()) {
             album.text = albumT
-            if(nameAlbum.visibility === View.GONE){
+            if (nameAlbum.visibility == View.GONE) {
                 album.visibility = View.VISIBLE
                 nameAlbum.visibility = View.VISIBLE
             }
-        }else{
+        } else {
             album.visibility = View.GONE
             nameAlbum.visibility = View.GONE
         }
-
         playButton = findViewById(R.id.PlayButton)
-        preparePlayer()
-        playButton.setOnClickListener {
-            playbackControl()
+
+        if(player is MediaPlayerImpl) {
+            player.preparePlayer()
+            playButton.setOnClickListener {
+                player.playbackControl()
+                if (player.getStatus() == STATE_PLAYING) {
+                    playButton.setImageResource(R.drawable.pause)
+                    timeSet()
+                } else {
+                    playButton.setImageResource(R.drawable.playbutton)
+                }
+            }
+
         }
         currTime = findViewById(R.id.currentTimePlay)
+
     }
 
-    private fun preparePlayer(){
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener{
-            playerState = STATE_PREPARED
-            currentTime = 0
-            currTime.text = dateFormat.format(currentTime)
-        }
-        mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.playbutton)
-            playerState = STATE_PREPARED
-            currentTime = 0
-            currTime.text = dateFormat.format(currentTime)
-        }
-    }
-    override fun onPause() {
-        super.onPause()
-        pausePlayer()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayer.release()
-    }
-
-    private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-    }
-    private fun timeSet(){
-        handler?.post (
+    private fun timeSet() {
+        handler?.post(
             createUpdateTime()
-                )
+        )
     }
 
     private fun createUpdateTime(): Runnable {
-        return object : Runnable{
+        return object : Runnable {
             override fun run() {
-                val currentLocalTime = mediaPlayer.currentPosition
-                if (playerState == STATE_PLAYING && currentLocalTime >= 0){
+                val currentLocalTime = player.getPlayer().currentPosition
+                if (player.getStatus() == STATE_PLAYING && currentLocalTime >= 0) {
                     val seconds = currentLocalTime!!
                     currTime.text = dateFormat.format(seconds)
                     handler?.postDelayed(this, DELAY)
-                }else{
+                }else if(player.getStatus()== STATE_PREPARED){
+                    playButton.setImageResource(R.drawable.playbutton)
+                    val seconds = 0
+                    currTime.text = dateFormat.format(seconds)
+                }
+                else {
                     handler?.removeCallbacks(this)
                 }
             }
         }
-    }
-
-    private fun startPlayer(){
-        mediaPlayer.start()
-        playButton.setImageResource(R.drawable.pause)
-        playerState = STATE_PLAYING
-        timeSet()
-    }
-    private fun pausePlayer(){
-
-        mediaPlayer.pause()
-        playButton.setImageResource(R.drawable.playbutton)
-        playerState = STATE_PAUSED
-    }
-
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics
-        ).toInt()
-    }
-
-    private fun pxToDp(px: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_PX,
-            px,
-            context.resources.displayMetrics
-        ).toInt()
-    }
-
-    private fun displayHeight(cont: Context): Int {
-        val dspl = cont.resources.displayMetrics
-        val tmp = dspl.heightPixels
-        return tmp
-    }
-
-    private fun displayWidth(cont: Context): Int {
-        val dspl = cont.resources.displayMetrics
-        val tmp = dspl.widthPixels
-        return tmp
-    }
-
-    private fun change512(str: String, strTo: String): String {
-        return str.substringBeforeLast('/') + strTo
     }
 
     companion object {
@@ -217,3 +151,5 @@ class PlayerActivity2 : AppCompatActivity() {
         private const val DELAY = 1000L
     }
 }
+
+//}

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.ui.find
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -18,14 +17,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.player.PlayerActivity2
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.audioplayer.PlayerActivity2
+import com.example.playlistmaker.ui.audioplayer.PlayerActivity21
 import com.google.gson.Gson
 
 import retrofit2.Call
@@ -306,7 +306,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         objectSave.addTrackToList(tmp)
 
 
-        val intent = Intent(this, PlayerActivity2::class.java)
+        val intent = Intent(this, PlayerActivity21::class.java)
         //val intent = Intent(this, PlayerActivity::class.java)
         if (track != null) {
             intent.putExtra("trackName", track.trackName)

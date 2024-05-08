@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.ui.find
 
 import android.content.ContentValues.TAG
 import android.util.Log

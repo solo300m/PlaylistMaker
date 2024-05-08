@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.ui.find
 
 import android.content.Context
 import android.util.TypedValue
@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 
 import java.util.Locale
 import kotlin.properties.Delegates
 
 
-class TrackViewHolder(parentView: View, listener:Listener) : RecyclerView.ViewHolder(parentView) {
+class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewHolder(parentView) {
     private val trackName: TextView
     private val authorTrace: TextView
     private val timeTrack: TextView
@@ -63,7 +64,7 @@ class TrackViewHolder(parentView: View, listener:Listener) : RecyclerView.ViewHo
     }
     private val tmp: Int = dpToPx(2f, itemView.context)
 
-    fun bind(model: Track, listener:Listener) {
+    fun bind(model: Track, listener: Listener) {
         trackId = model.trackId
         trackName.text = model.trackName
         authorTrace.text = model.artistName

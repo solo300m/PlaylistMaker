@@ -1,18 +1,8 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.ui.find
 // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
-import android.view.View
-import android.widget.Toast
-import com.example.playlistmaker.R
-import com.example.playlistmaker.find.FindActivity.Companion.trackList
-import com.example.playlistmaker.find.FindActivity.Companion.tracks
-import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.find.FindActivity.Companion.trackList
+import com.example.playlistmaker.ui.find.FindActivity.Companion.tracks
 import java.util.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 signs"
@@ -55,7 +45,7 @@ class TrackPreferences { // класс для обработки операци�
         }
     }
 
-    fun getTrack(input:Long):Track?{
+    fun getTrack(input:Long): Track?{
         val track = tracks.find { it.trackId == input }
         if(track != null) {
                 return track

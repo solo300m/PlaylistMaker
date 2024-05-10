@@ -1,11 +1,8 @@
 package com.example.playlistmaker.ui.audioplayer
 
-import android.content.Context
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -16,7 +13,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.DataService
 import com.example.playlistmaker.data.dto.ServiceMethod
-import com.example.playlistmaker.domain.api.PlayerType
+import com.example.playlistmaker.domain.api.MediaPlayerInterface
 import com.example.playlistmaker.domain.impl.MediaPlayerImpl
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -28,13 +25,11 @@ class PlayerActivity21 : AppCompatActivity() {
     private lateinit var nameSinger: TextView
     private lateinit var longTime: TextView
     private lateinit var album: TextView
+    private lateinit var country: TextView
     private lateinit var nameAlbum: TextView
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currTime: TextView
-
-
-    private var currentTime: Int? = null
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
@@ -42,7 +37,7 @@ class PlayerActivity21 : AppCompatActivity() {
 
     private var handler: Handler? = null
 
-    private var player: PlayerType = MediaPlayerImpl()
+    private var player: MediaPlayerInterface = MediaPlayerImpl()
     private val service: ServiceMethod = DataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +46,7 @@ class PlayerActivity21 : AppCompatActivity() {
         var singerName = intent.getStringExtra("nameSinger")
         var longTimeT = intent.getLongExtra("longTime", 0L)
         var albumT = intent.getStringExtra("album")
+        var countryName = intent.getStringExtra("country")
         previewUrl = intent.getStringExtra("url").toString()
         //Toast.makeText(this,"URL: ${previewUrl}",Toast.LENGTH_LONG).show()
 
@@ -66,12 +62,12 @@ class PlayerActivity21 : AppCompatActivity() {
             finish()
         }
 
-        val pictureUrl_512 = service.change512(pictureUrl.toString(), "/512x512bb.jpg")
+        val pictureUrl512 = service.setSizePicture512(pictureUrl.toString(), "/512x512bb.jpg")
         albumPicture = findViewById(R.id.albumPicture)
         val tmp: Int = service.dpToPx(8f, this)
         Glide
             .with(this)
-            .load(pictureUrl_512)
+            .load(pictureUrl512)
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(tmp))
             .into(albumPicture)
@@ -114,7 +110,8 @@ class PlayerActivity21 : AppCompatActivity() {
 
         }
         currTime = findViewById(R.id.currentTimePlay)
-
+        country = findViewById(R.id.country)
+        country.text = countryName
     }
 
     private fun timeSet() {

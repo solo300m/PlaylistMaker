@@ -38,4 +38,5 @@
     <string name="genre" translatable="false">Rock</string>
     <string name="nameCountry">Страна</string>
     <string name="country">Великобритания</string>
+    <string name="testMail" translatable="false">solo300m@yandex.ru</string>
 </resources>

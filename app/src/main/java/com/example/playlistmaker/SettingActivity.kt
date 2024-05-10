@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.ui.find.FindActivity
+import com.example.playlistmaker.find.FindActivity
 
 const val NIGHT_CONST: Int = 2
 
@@ -82,8 +82,7 @@ class SettingActivity : AppCompatActivity() {
             val substr: String = resources.getString(R.string.subjectTest)
             val intSend = Intent(Intent.ACTION_SENDTO)
                 intSend.data = Uri.parse("mailto:")
-                //intSend.type = "text/plain"
-                intSend.putExtra(Intent.EXTRA_EMAIL, arrayOf("solo300m@yandex.ru"))
+                intSend.putExtra(Intent.EXTRA_EMAIL, arrayOf(resources.getString(R.string.testMail)))
                 intSend.putExtra(Intent.EXTRA_SUBJECT, title)
                 intSend.putExtra(Intent.EXTRA_TEXT, substr)
 
@@ -94,10 +93,6 @@ class SettingActivity : AppCompatActivity() {
         termsButton.setOnClickListener {
             val intentContent = Intent(Intent.ACTION_VIEW,
             Uri.parse(resources.getString(R.string.yandexText)))
-            /*Intent(Intent.ACTION_VIEW).apply {
-                Uri.parse(resources.getString(R.string.yandexText))
-                startActivity(this)
-            }*/
             startActivity(intentContent)
         }
     }

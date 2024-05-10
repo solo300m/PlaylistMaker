@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.find
+package com.example.playlistmaker.find
 
 import android.content.Context
 import android.util.TypedValue
@@ -30,7 +30,6 @@ class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewH
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
     }
-    val viewM = FindViewModel()
 
     init {
         trackName = parentView.findViewById(R.id.trackName)
@@ -46,13 +45,6 @@ class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewH
             if (track != null) {
                 listener.onClick(track)
             }
-            /*objectSave.onFindToTrack(trackId.toLong())
-
-            val track = objectSave.getTrack(trackId.toLong())
-            Toast.makeText(parentView.context,"Выбран трак с ID: ${track?.trackId}",Toast.LENGTH_LONG).show()
-            currentTrack = track;
-            val tmp = objectSave.trackTmp[0]
-            objectSave.addTrackToList(tmp)*/
         }
 
     }
@@ -62,7 +54,7 @@ class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewH
             dp,
             context.resources.displayMetrics).toInt()
     }
-    private val tmp: Int = dpToPx(2f, itemView.context)
+    private val cornerToPx: Int = dpToPx(2f, itemView.context)
 
     fun bind(model: Track, listener: Listener) {
         trackId = model.trackId
@@ -73,7 +65,7 @@ class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewH
             .with(view)
             .load(model.artworkUrl100)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(tmp))
+            .transform(RoundedCorners(cornerToPx))
             .into(pictureTrack)
     }
 

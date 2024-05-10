@@ -12,8 +12,7 @@ class DataService:ServiceMethod {
         ).toInt()
     }
 
-
-    override fun change512(str: String, strTo: String): String {
+    override fun setSizePicture512(str: String, strTo: String): String {
         return str.substringBeforeLast('/') + strTo
     }
 }

@@ -2,7 +2,7 @@ package com.example.playlistmaker.domain.api
 
 import android.media.MediaPlayer
 
-interface PlayerType {
+interface MediaPlayerInterface {
     fun init(expression:String)
     fun preparePlayer()
     fun onPause()

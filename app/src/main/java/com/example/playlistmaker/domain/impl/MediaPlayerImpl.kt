@@ -1,11 +1,7 @@
 package com.example.playlistmaker.domain.impl
-
 import android.media.MediaPlayer
-
-import com.example.playlistmaker.domain.api.PlayerType
-
-
-class MediaPlayerImpl : PlayerType {
+import com.example.playlistmaker.domain.api.MediaPlayerInterface
+class MediaPlayerImpl : MediaPlayerInterface {
     var previewUrl: String = ""
     override fun init(expression: String) {
         if (!expression.isNullOrEmpty())
@@ -22,14 +18,9 @@ class MediaPlayerImpl : PlayerType {
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = STATE_PREPARED
-//            currentTime = 0
-//            currTime.text = dateFormat.format(currentTime)
         }
         mediaPlayer.setOnCompletionListener {
-            //playButton.setImageResource(R.drawable.playbutton)
             playerState = STATE_PREPARED
-//            currentTime = 0
-//            currTime.text = dateFormat.format(currentTime)
         }
     }
 
@@ -38,7 +29,6 @@ class MediaPlayerImpl : PlayerType {
     }
 
     override fun onDestroy() {
-        //super.onDestroy()
         mediaPlayer.release()
     }
 
@@ -56,13 +46,11 @@ class MediaPlayerImpl : PlayerType {
 
     override fun startPlayer() {
         mediaPlayer.start()
-        //playButton.setImageResource(R.drawable.pause)
         playerState = STATE_PLAYING
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
-        //playButton.setImageResource(R.drawable.playbutton)
         playerState = STATE_PAUSED
     }
 
@@ -79,6 +67,6 @@ class MediaPlayerImpl : PlayerType {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-//        private const val DELAY = 1000L
+        private const val DELAY = 1000L
     }
 }

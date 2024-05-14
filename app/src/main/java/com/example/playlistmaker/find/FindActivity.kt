@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.audioplayer.PlayerActivity21
+import com.example.playlistmaker.ui.audioplayer.PlayerActivity
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -273,7 +273,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         objectSave.addTrackToList(tmp)
 
 
-        val intent = Intent(this, PlayerActivity21::class.java)
+        val intent = Intent(this, PlayerActivity::class.java)
         if (track != null) {
             intent.putExtra("trackName", track.trackName)
             intent.putExtra("trackPicture", track.artworkUrl100)

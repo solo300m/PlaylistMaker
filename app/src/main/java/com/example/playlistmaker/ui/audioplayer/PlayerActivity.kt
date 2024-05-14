@@ -18,7 +18,7 @@ import com.example.playlistmaker.domain.impl.MediaPlayerImpl
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity21 : AppCompatActivity() {
+class PlayerActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var nameSouth: TextView
     private lateinit var albumPicture: ImageView

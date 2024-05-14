@@ -6,12 +6,6 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.playlistmaker.find.FindActivity
 
-
-//data class Buffer(
-//    val text1: String,
-//    val text2: String
-//) : Serializable
-
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

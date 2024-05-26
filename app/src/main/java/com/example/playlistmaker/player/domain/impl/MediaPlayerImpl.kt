@@ -1,7 +1,7 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.player.domain.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.domain.api.MediaPlayerInterface
+import com.example.playlistmaker.player.domain.api.MediaPlayerInterface
 class MediaPlayerImpl : MediaPlayerInterface {
     var previewUrl: String = ""
     override fun init(expression: String) {

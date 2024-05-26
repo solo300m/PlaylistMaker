@@ -1,9 +1,9 @@
-package com.example.playlistmaker.data.dto
+package com.example.playlistmaker.player.data.dto
 
 import android.content.Context
 import android.util.TypedValue
 
-class DataService:ServiceMethod {
+class DataService: ServiceMethod {
     override fun dpToPx(dp: Float, context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,

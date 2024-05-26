@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.data
 // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.player.domain.models.Track
 import com.example.playlistmaker.search.ui.FindActivity.Companion.trackList
 import com.example.playlistmaker.search.ui.FindActivity.Companion.tracks
 import java.util.ArrayList

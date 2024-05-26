@@ -1,8 +1,8 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.search.data
 // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.find.FindActivity.Companion.trackList
-import com.example.playlistmaker.find.FindActivity.Companion.tracks
+import com.example.playlistmaker.search.ui.FindActivity.Companion.trackList
+import com.example.playlistmaker.search.ui.FindActivity.Companion.tracks
 import java.util.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 sings"

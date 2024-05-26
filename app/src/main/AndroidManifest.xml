@@ -16,14 +16,14 @@
         android:theme="@style/Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".ui.audioplayer.PlayerActivity"
+            android:name=".player.ui.PlayerActivity"
             android:exported="false" />
         <activity
             android:name=".TestActivity"
             android:exported="false" />
 
         <activity
-            android:name=".find.FindActivity"
+            android:name=".search.ui.FindActivity"
             android:exported="false" />
         <activity
             android:name=".MediatekaActivity"

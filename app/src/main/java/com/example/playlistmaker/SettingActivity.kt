@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.find.FindActivity
+import com.example.playlistmaker.search.ui.FindActivity
 
 const val NIGHT_CONST: Int = 2
 

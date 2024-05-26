@@ -1,4 +1,4 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.search.domain
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

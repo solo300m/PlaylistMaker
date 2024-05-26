@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.example.playlistmaker.find.FindActivity
+import com.example.playlistmaker.search.ui.FindActivity
 
 class MainActivity : AppCompatActivity() {
 

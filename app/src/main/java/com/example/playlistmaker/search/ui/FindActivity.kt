@@ -1,4 +1,5 @@
-package com.example.playlistmaker.find
+package com.example.playlistmaker.search.ui
+
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -21,7 +22,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.audioplayer.PlayerActivity
+import com.example.playlistmaker.search.data.ITunes
+import com.example.playlistmaker.search.domain.TrackAdapter
+import com.example.playlistmaker.search.data.TrackResponse
+import com.example.playlistmaker.search.domain.TrackViewHolder
+import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.search.data.TRACK_LIST_KEY
+import com.example.playlistmaker.search.data.TrackPreferences
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/padding_horiz_main"
     android:paddingBottom="@dimen/padding_bottom_main"
-    tools:context=".MainActivity">
+    tools:context=".main.ui.activity.MainActivity">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

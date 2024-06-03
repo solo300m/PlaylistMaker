@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.settings.ui.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -7,26 +7,38 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.search.ui.FindActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.sharing.ui.activity.MediatekaActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.search.ui.activity.FindActivity
+import com.example.playlistmaker.settings.ui.view_model.SettingViewModel
 
 const val NIGHT_CONST: Int = 2
 
 class SettingActivity : AppCompatActivity() {
+    private lateinit var viewModelSetting: SettingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val stateSave = AppState()
-        val sharedSet = getSharedPreferences(SETTING_SAVE, MODE_PRIVATE)
-        val cont = findViewById<ImageView>(R.id.control)
-        var stateG = stateSave.readState(sharedSet)
+        viewModelSetting = ViewModelProvider(
+            this,
+            SettingViewModel.getViewModelFactory()
+        )[SettingViewModel::class.java]
+        //viewModelSetting.testViewModel("Setting viewModel started!")
 
-        if (stateG == NIGHT_CONST) {
-            stateSave.setNightMode()
+        //val sharedSet = getSharedPreferences(SETTING_SAVE, MODE_PRIVATE)
+        //val sharedSet = viewModelSetting.getSharedPreferences()
+        //val stateSave: AppStateInterface = AppState(sharedSet)
+        val cont = findViewById<ImageView>(R.id.control)
+        //var stateG = stateSave.readState()
+
+        if (viewModelSetting.readState() == NIGHT_CONST) {
+            viewModelSetting.setNightMode()
 
             cont.setImageResource(R.drawable.control2)
         } else {
-            stateSave.setLightMode()
+            viewModelSetting.setLightMode()
 
             cont.setImageResource(R.drawable.control)
         }
@@ -35,14 +47,14 @@ class SettingActivity : AppCompatActivity() {
 
             if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
                 cont.setImageResource(R.drawable.control2)
-                stateSave.setNightMode()
+                viewModelSetting.setNightMode()
 
-                stateSave.writeState(sharedSet, AppCompatDelegate.getDefaultNightMode())
+                viewModelSetting.writeState(AppCompatDelegate.getDefaultNightMode())
             } else {
                 cont.setImageResource(R.drawable.control)
-                stateSave.setLightMode()
+                viewModelSetting.setLightMode()
 
-                stateSave.writeState(sharedSet, AppCompatDelegate.getDefaultNightMode())
+                viewModelSetting.writeState(AppCompatDelegate.getDefaultNightMode())
             }
         }
 
@@ -62,7 +74,6 @@ class SettingActivity : AppCompatActivity() {
 
         val homeButton = findViewById<ImageView>(R.id.backSettingToMain)
         homeButton.setOnClickListener {
-
             finish()
         }
         val sareButton = findViewById<ImageView>(R.id.sareButton);
@@ -81,18 +92,20 @@ class SettingActivity : AppCompatActivity() {
             val title: String = resources.getString(R.string.titleEmailTest)
             val substr: String = resources.getString(R.string.subjectTest)
             val intSend = Intent(Intent.ACTION_SENDTO)
-                intSend.data = Uri.parse("mailto:")
-                intSend.putExtra(Intent.EXTRA_EMAIL, arrayOf(resources.getString(R.string.testMail)))
-                intSend.putExtra(Intent.EXTRA_SUBJECT, title)
-                intSend.putExtra(Intent.EXTRA_TEXT, substr)
+            intSend.data = Uri.parse("mailto:")
+            intSend.putExtra(Intent.EXTRA_EMAIL, arrayOf(resources.getString(R.string.testMail)))
+            intSend.putExtra(Intent.EXTRA_SUBJECT, title)
+            intSend.putExtra(Intent.EXTRA_TEXT, substr)
 
             startActivity(intSend)
 
         }
         val termsButton = findViewById<ImageView>(R.id.termsButton)
         termsButton.setOnClickListener {
-            val intentContent = Intent(Intent.ACTION_VIEW,
-            Uri.parse(resources.getString(R.string.yandexText)))
+            val intentContent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(resources.getString(R.string.yandexText))
+            )
             startActivity(intentContent)
         }
     }

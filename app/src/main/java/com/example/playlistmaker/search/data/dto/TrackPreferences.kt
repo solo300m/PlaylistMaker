@@ -1,18 +1,22 @@
-package com.example.playlistmaker.search.data
+package com.example.playlistmaker.search.data.dto
 // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.ui.FindActivity.Companion.trackList
-import com.example.playlistmaker.search.ui.FindActivity.Companion.tracks
-import java.util.ArrayList
+import com.example.playlistmaker.search.ui.activity.FindActivity.Companion.trackList
+import com.example.playlistmaker.search.ui.activity.FindActivity.Companion.tracks
+import kotlin.collections.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 sings"
 const val LIMIT_SAVE_LIST: Int = 10
 
-class TrackPreferences { // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
-    val trackTmp =
+class TrackPreferences : SaveListTrack{ // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
+    private val trackTmp =
         ArrayList<Track>() //временная переменная для сохранения Track на которой был осуществлен клик
 
-    fun addTrackToList(unit: Track) { // формирование ограниченного списка сохраненных треков
+    override fun getTracksTmp(): ArrayList<Track> {
+        return trackTmp
+    }
+
+    override fun addTrackToList(unit: Track) { // формирование ограниченного списка сохраненных треков
         var idx = -1
         for (i in 0..trackList.size - 1) {
             if (trackList[i] == unit) {
@@ -31,7 +35,7 @@ class TrackPreferences { // класс для обработки операци�
         }
     }
 
-    fun onFindToTrack(input: Long) { // поиск трека по клику на позиции в RecyclerView
+    override fun onFindToTrack(input: Long) { // поиск трека по клику на позиции в RecyclerView
         if (trackTmp.isNotEmpty()) {
             trackTmp.clear()
         }
@@ -42,6 +46,6 @@ class TrackPreferences { // класс для обработки операци�
                 trackTmp.add(findTrack)
         }
     }
-    fun getTrack(input: Long): Track? = tracks.find { it.trackId == input }
+    override fun getTrack(input: Long): Track? = tracks.find { it.trackId == input }
 
 }

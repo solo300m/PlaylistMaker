@@ -1,10 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.sharing.ui.activity
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
+import com.example.playlistmaker.R
 
 class MediatekaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

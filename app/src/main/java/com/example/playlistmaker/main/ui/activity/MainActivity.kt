@@ -1,17 +1,25 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.main.ui.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.example.playlistmaker.search.ui.FindActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.R
+import com.example.playlistmaker.main.ui.view_models.MainViewModel
+import com.example.playlistmaker.search.ui.activity.FindActivity
+import com.example.playlistmaker.settings.ui.activity.SettingActivity
+import com.example.playlistmaker.sharing.ui.activity.MediatekaActivity
+
+//private lateinit var mainViewModel: MainViewModel
 
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        /*mainViewModel =
+            ViewModelProvider(this, MainViewModel.getViewModelFactory())[MainViewModel::class.java]
+        mainViewModel.testViewModel("Main page started!")*/
 
         val findButton = findViewById<Button>(R.id.find)
         val mediatekaButton = findViewById<Button>(R.id.mediateka)

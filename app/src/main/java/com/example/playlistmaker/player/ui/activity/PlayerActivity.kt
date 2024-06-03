@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui
+package com.example.playlistmaker.player.ui.activity
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,7 +7,9 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -15,6 +17,8 @@ import com.example.playlistmaker.player.data.dto.DataService
 import com.example.playlistmaker.player.data.dto.ServiceMethod
 import com.example.playlistmaker.player.domain.api.MediaPlayerInterface
 import com.example.playlistmaker.player.domain.impl.MediaPlayerImpl
+import com.example.playlistmaker.player.domain.models.Track
+import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -30,6 +34,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var playButton: ImageView
     private lateinit var previewUrl: String
     private lateinit var currTime: TextView
+    private lateinit var viewModelPlayer: PlayerViewModel
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
@@ -37,23 +42,48 @@ class PlayerActivity : AppCompatActivity() {
 
     private var handler: Handler? = null
 
-    private var player: MediaPlayerInterface = MediaPlayerImpl()
+   // private var player: MediaPlayerInterface = MediaPlayerImpl()
     private val service: ServiceMethod = DataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        var trackId = intent.getLongExtra("trackId", 0L)
         var trackName = intent.getStringExtra("trackName")
         var pictureUrl = intent.getStringExtra("trackPicture")
         var singerName = intent.getStringExtra("nameSinger")
         var longTimeT = intent.getLongExtra("longTime", 0L)
         var albumT = intent.getStringExtra("album")
         var countryName = intent.getStringExtra("country")
+        var realiseDate = intent.getStringExtra("realiseDate")
+        var genreName = intent.getStringExtra("genreName")
         previewUrl = intent.getStringExtra("url").toString()
-        //Toast.makeText(this,"URL: ${previewUrl}",Toast.LENGTH_LONG).show()
 
-        player.init(previewUrl)
+        val currentTrack: Track = Track(
+            trackId = trackId,
+            trackName = trackName ?: "",
+            artistName = singerName ?: "",
+            trackTimeMillis = longTimeT,
+            artworkUrl100 = pictureUrl ?: "",
+            collectionName = albumT ?: "",
+            releaseDate = realiseDate ?: "",
+            primaryGenreName = genreName ?: "",
+            country = countryName ?: "",
+            previewUrl = previewUrl
+        )
+        //Toast.makeText(this, "Track ${currentTrack.trackName} started!", Toast.LENGTH_LONG).show()
+        //Toast.makeText(this,"URL: ${previewUrl}",Toast.LENGTH_LONG).show()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
+
+        if (currentTrack !== null) {
+            viewModelPlayer = ViewModelProvider(
+                this,
+                PlayerViewModel.getViewModelFactory(currentTrack)
+            )[PlayerViewModel::class.java]
+            viewModelPlayer.testViewModelPlayer()
+        }
+        viewModelPlayer.init()
+        //player.init(currentTrack.previewUrl)
 
         handler = Handler(Looper.getMainLooper())
 
@@ -96,11 +126,11 @@ class PlayerActivity : AppCompatActivity() {
         }
         playButton = findViewById(R.id.PlayButton)
 
-        if(player is MediaPlayerImpl) {
-            player.preparePlayer()
+        if (viewModelPlayer.player is MediaPlayerImpl) {
+            viewModelPlayer.preparePlayer()
             playButton.setOnClickListener {
-                player.playbackControl()
-                if (player.getStatus() == STATE_PLAYING) {
+                viewModelPlayer.playbackControl()
+                if (viewModelPlayer.getStatus() == STATE_PLAYING) {
                     playButton.setImageResource(R.drawable.pause)
                     timeSet()
                 } else {
@@ -123,17 +153,16 @@ class PlayerActivity : AppCompatActivity() {
     private fun createUpdateTime(): Runnable {
         return object : Runnable {
             override fun run() {
-                val currentLocalTime = player.getPlayer().currentPosition
-                if (player.getStatus() == STATE_PLAYING && currentLocalTime >= 0) {
+                val currentLocalTime = viewModelPlayer.getPlayer().currentPosition
+                if (viewModelPlayer.getStatus() == STATE_PLAYING && currentLocalTime >= 0) {
                     val seconds = currentLocalTime!!
                     currTime.text = dateFormat.format(seconds)
                     handler?.postDelayed(this, DELAY)
-                }else if(player.getStatus()== STATE_PREPARED){
+                } else if (viewModelPlayer.getStatus() == STATE_PREPARED) {
                     playButton.setImageResource(R.drawable.playbutton)
                     val seconds = 0
                     currTime.text = dateFormat.format(seconds)
-                }
-                else {
+                } else {
                     handler?.removeCallbacks(this)
                 }
             }

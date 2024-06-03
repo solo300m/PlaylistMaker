@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.ui
+package com.example.playlistmaker.search.ui.activity
 
 import android.content.Context
 import android.content.Intent
@@ -18,17 +18,20 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.data.ITunes
+import com.example.playlistmaker.search.data.dto.ITunes
 import com.example.playlistmaker.search.domain.TrackAdapter
-import com.example.playlistmaker.search.data.TrackResponse
+import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.domain.TrackViewHolder
-import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.data.TRACK_LIST_KEY
-import com.example.playlistmaker.search.data.TrackPreferences
+import com.example.playlistmaker.player.ui.activity.PlayerActivity
+import com.example.playlistmaker.search.data.dto.TRACK_LIST_KEY
+
+import com.example.playlistmaker.search.data.dto.TrackPreferences
+import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,6 +40,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
+
+    private lateinit var viewModelSearch: SearchViewModel
+
     private lateinit var editText: EditText
     private lateinit var clearBtn: ImageView
     private lateinit var recyclerView: RecyclerView
@@ -46,19 +52,14 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private lateinit var updateButton: Button
     private lateinit var titleFind: TextView//заголовок сохраненного списка
     private lateinit var clearButtonFind: Button//кнопка очистки списка сохраненных треков
-    private lateinit var progressBar:ProgressBar // виджет ProgressBar
-    private var objectSave = TrackPreferences()
+    private lateinit var progressBar: ProgressBar // виджет ProgressBar
 
     private val adapter = TrackAdapter(tracks, this)
     private var input: String? = null
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(trackBaseURL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val trackService = retrofit.create(ITunes::class.java)
-
-    private val searchRunnable = Runnable{onFindToInternet()} // Runnable объект для debonce поисковой строки
+    private lateinit var trackService:ITunes
+    private val searchRunnable =
+        Runnable { onFindToInternet() } // Runnable объект для debonce поисковой строки
     private val handlerFind = Handler(Looper.getMainLooper()) // Handler главного IU потока
 
 
@@ -66,13 +67,20 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find)
 
-        progressBar = findViewById(R.id.progressBar)
+        viewModelSearch = ViewModelProvider(
+            this, SearchViewModel.getViewModelFactory(
+            )
+        )[SearchViewModel::class.java]
+        //viewModelSearch.toastDiagnostic("ViewModel is created!")
+        trackService = viewModelSearch.retrofit.getITunesClient()
 
+        progressBar = findViewById(R.id.progressBar)
         titleFind = findViewById(R.id.titleFind)
         clearButtonFind = findViewById(R.id.clearFind)
-        val sharedPref =
-            getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)//инициация SharedPreferences
-        loadList(sharedPref) // загрузка сохраненного списка из sharedPreferences
+
+        /*val sharedPref =
+            getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)*///инициация SharedPreferences
+        viewModelSearch.loadList() // загрузка сохраненного списка из sharedPreferences
         if (trackList.isNotEmpty()) {
             tracks.clear()
             tracks.addAll(trackList.reversed())// загрузка сохраненного списка из sharedPreferences в реверсивном виде
@@ -80,6 +88,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         } else {
             offTitleAndButton()
         }
+
         codeRequest200 = findViewById(R.id.placeholder_200)
         codeRequest500 = findViewById(R.id.placeholder_500)
         updateButton = findViewById(R.id.updateButton)
@@ -89,14 +98,14 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             finish()
         }
         clearButtonFind.setOnClickListener {//обработчик кнопки "Очистка списка"
-            clearTrackList(sharedPref)
+            viewModelSearch.clearTrackList()
             offTitleAndButton()
             recyclerView.adapter?.notifyDataSetChanged()
         }
         editText = findViewById<EditText>(R.id.searchField)
         clearBtn = findViewById(R.id.clearIcon)
         clearBtn.setOnClickListener {
-            cleanTextLine(sharedPref)
+            cleanTextLine()
         }
         if (savedInstanceState != null) {
             editText.setText(savedInstanceState.getString(TEXT_VIEW_KEY))
@@ -105,6 +114,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!s.isNullOrEmpty()) {
                     input = s.toString()
@@ -115,6 +125,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
 
                 clearBtn.visibility = clearButtonVisibility(s)
             }
+
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -126,12 +137,13 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             onFindToInternet()
         }
     }
-    private fun cleanTextLine(sharedPref:SharedPreferences){
+
+    private fun cleanTextLine() {
         editText.setText("")
         input = ""
         tracks.clear()
-        writeList(sharedPref) //сохранение списка в sharedPreferences
-        loadList(sharedPref) //загрузка из sharedPreferences
+        viewModelSearch.writeList() //сохранение списка в sharedPreferences
+        viewModelSearch.loadList() //загрузка из sharedPreferences
         if (trackList.isNotEmpty()) {
             tracks.addAll(trackList.reversed()) //reversed для обеспечения первой позиции последней запрошенной записи
             recyclerView.visibility = View.VISIBLE
@@ -147,41 +159,10 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         inputMethodManager?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
-    private fun searchDebounce(){
+    private fun searchDebounce() {
         progressBar.visibility = View.VISIBLE
         handlerFind.removeCallbacks(searchRunnable)
         handlerFind.postDelayed(searchRunnable, SEARCH_DELAY)
-    }
-
-    private fun clearTrackList(sharedPreferences: SharedPreferences) {
-        trackList.clear()
-        tracks.clear()
-        writeList(sharedPreferences)
-    }
-
-    fun loadList(sharedPreferences: SharedPreferences) { // функция выгрузки из sharedPreferences в переменную trackList
-        val tmpArray = read(sharedPreferences);
-        trackList.clear()
-        trackList.addAll(tmpArray)
-    }
-
-    fun writeList(sharedPreferences: SharedPreferences) { // функция сохранения в sharedPreferences из trackList
-        write(sharedPreferences, trackList)
-    }
-
-    private fun read(sharedPreferences: SharedPreferences): Array<Track> { // функция выгрузки из sharedPreferences служебная
-        val json = sharedPreferences.getString(TRACK_LIST_KEY, null) ?: return emptyArray()
-        return Gson().fromJson(json, Array<Track>::class.java)
-    }
-
-    private fun write(
-        sharedPreferences: SharedPreferences,
-        tracksList: List<Track>
-    ) { // функция сохранения в sharedPreferences служебная
-        val json = Gson().toJson(tracksList)
-        sharedPreferences.edit()
-            .putString(TRACK_LIST_KEY, json)
-            .apply()
     }
 
     private fun onFindToInternet() {
@@ -209,27 +190,29 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                         if (tracks.isEmpty()) {
                             recyclerView.visibility = View.GONE
                             codeRequest200.visibility = View.VISIBLE
-                        }else{
-                            if(tracks.isEmpty() && trackList.isNotEmpty()){
+                        } else {
+                            if (tracks.isEmpty() && trackList.isNotEmpty()) {
                                 tracks.addAll(trackList.reversed())
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
-                            }else if(tracks.isNotEmpty()){
+                            } else if (tracks.isNotEmpty()) {
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
-                            }else if(tracks.isEmpty() && trackList.isEmpty()){
+                            } else if (tracks.isEmpty() && trackList.isEmpty()) {
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
                             }
 
                         }
                     } else {
-                        if(codeRequest200.isVisible || recyclerView.isVisible) {
+                        if (codeRequest200.isVisible || recyclerView.isVisible) {
                             codeRequest500.visibility = View.VISIBLE
                             codeRequest200.visibility = View.GONE
                             recyclerView.visibility = View.GONE
-                            titleFind.visibility = View.GONE // включение видимости заголовка "Вы искали"
-                            clearButtonFind.visibility = View.GONE //кнопка "Очистить список" видимость true
+                            titleFind.visibility =
+                                View.GONE // включение видимости заголовка "Вы искали"
+                            clearButtonFind.visibility =
+                                View.GONE //кнопка "Очистить список" видимость true
                         }
                     }
                 }
@@ -272,47 +255,53 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     }
 
     override fun onClick(track: Track) { // обработчик нажатия на запись в списке треков
-        val sharedPref =
-            getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)//инициация SharedPreferences
-        objectSave.onFindToTrack(track.trackId.toLong())
+        /*val sharedPref =
+            getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)*///инициация SharedPreferences
+        viewModelSearch.onFindToTrack(track.trackId.toLong())
         currentTrack = track;
-        val tmp = objectSave.trackTmp[0]
-        objectSave.addTrackToList(tmp)
+        val tmp = viewModelSearch.getTrackTmp()[0]
+        viewModelSearch.addTrackToList(tmp)
 
 
         val intent = Intent(this, PlayerActivity::class.java)
         if (track != null) {
+            intent.putExtra("trackId", track.trackId)
             intent.putExtra("trackName", track.trackName)
             intent.putExtra("trackPicture", track.artworkUrl100)
             intent.putExtra("nameSinger", track.artistName)
             intent.putExtra("longTime", track.trackTimeMillis)
             intent.putExtra("album", track.primaryGenreName)
             intent.putExtra("url", track.previewUrl)
-            intent.putExtra("country",track.country)
+            intent.putExtra("country", track.country)
+            intent.putExtra("releaseDate", track.releaseDate)
+            intent.putExtra("genreName", track.primaryGenreName)
         }
         startActivity(intent)
         if (trackList.isNotEmpty()) {
-            writeList(sharedPref) //сохранение списка в sharedPreferences
-            loadList(sharedPref) //загрузка из sharedPreferences
+            viewModelSearch.writeList() //сохранение списка в sharedPreferences
+            viewModelSearch.loadList() //загрузка из sharedPreferences
             recyclerView.adapter?.notifyDataSetChanged()
         }
     }
-    private fun offTitleAndButton(){
-        if(titleFind.isVisible){
+
+    private fun offTitleAndButton() {
+        if (titleFind.isVisible) {
             titleFind.visibility = View.GONE
             clearButtonFind.visibility = View.GONE
         }
     }
-    private fun onTitleAndButton(){
-        if(!titleFind.isVisible){
+
+    private fun onTitleAndButton() {
+        if (!titleFind.isVisible) {
             titleFind.visibility = View.VISIBLE
             clearButtonFind.visibility = View.VISIBLE
         }
     }
+
     companion object {
         val tracks = ArrayList<Track>()
         var trackList: MutableList<Track> = mutableListOf()
-        const val trackBaseURL = "https://itunes.apple.com"
+        //const val trackBaseURL = "https://itunes.apple.com"
         private const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
         var currentTrack: Track? = null
         private const val SEARCH_DELAY = 2000L

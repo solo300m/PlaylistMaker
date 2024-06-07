@@ -4,25 +4,21 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.main.domain.api.AppStateInterface
-import com.example.playlistmaker.main.domain.impl.AppState
-import com.example.playlistmaker.main.domain.impl.SETTING_SAVE
-import com.example.playlistmaker.settings.domain.api.SettingInteractor
-import com.example.playlistmaker.settings.domain.impl.SettingInteractorImpl
-import com.example.playlistmaker.sharing.domain.api.SharingInteractor
-import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
+import com.example.playlistmaker.creator.SETTING_SAVE
+import com.example.playlistmaker.main.domain.api.AppStateInteractor
+import com.example.playlistmaker.main.domain.impl.AppStateInteractorImpl
+
 
 class SettingViewModel(
     application: Application
 ) : AndroidViewModel(application) {
     private val appThis = application
-    private val appState: AppStateInterface = AppState(getSharedPreferences())
+    private val appState: AppStateInteractor = AppStateInteractorImpl(getSharedPreferences())
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {

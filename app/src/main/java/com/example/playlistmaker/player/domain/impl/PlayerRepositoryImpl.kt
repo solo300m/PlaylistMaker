@@ -1,18 +1,49 @@
 package com.example.playlistmaker.player.domain.impl
 
+import android.content.Intent
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.domain.api.MediaPlayerInterface
-class MediaPlayerImpl : MediaPlayerInterface {
-    var previewUrl: String = ""
+import com.example.playlistmaker.player.data.dto.PlayerRepository
+import com.example.playlistmaker.player.domain.models.Track
+
+class PlayerRepositoryImpl(intent:Intent) : PlayerRepository {
+    private val intent:Intent = intent
+    private var previewUrl: String = ""
+    private val mediaPlayer = MediaPlayer()
+    private var playerState = STATE_DEFAULT
+
+    override fun getCurrentTrack(): Track {
+        val trackId = intent.getLongExtra("trackId", 0L)
+        val trackName = intent.getStringExtra("trackName").toString()
+        val pictureUrl = intent.getStringExtra("trackPicture").toString()
+        val singerName = intent.getStringExtra("nameSinger").toString()
+        val longTimeT = intent.getLongExtra("longTime", 0L)
+        val albumT = intent.getStringExtra("album").toString()
+        val countryName = intent.getStringExtra("country").toString()
+        val realiseDate = intent.getStringExtra("realiseDate").toString()
+        val genreName = intent.getStringExtra("genreName").toString()
+        val previewUrl = intent.getStringExtra("url").toString()
+
+        return Track(
+            trackId,
+            trackName,
+            singerName,
+            longTimeT,
+            pictureUrl,
+            albumT,
+            realiseDate,
+            genreName,
+            countryName,
+            previewUrl,
+        )
+
+    }
+
     override fun init(expression: String) {
         if (!expression.isNullOrEmpty())
             previewUrl = expression
         else
             previewUrl = ""
     }
-
-    private val mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
 
     override fun preparePlayer() {
         mediaPlayer.setDataSource(previewUrl)
@@ -23,14 +54,6 @@ class MediaPlayerImpl : MediaPlayerInterface {
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
         }
-    }
-
-    override fun onPause() {
-        pausePlayer()
-    }
-
-    override fun onDestroy() {
-        mediaPlayer.release()
     }
 
     override fun playbackControl() {

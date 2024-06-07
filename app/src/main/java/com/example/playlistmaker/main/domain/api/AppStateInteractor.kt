@@ -1,8 +1,6 @@
 package com.example.playlistmaker.main.domain.api
 
-import android.content.SharedPreferences
-
-interface AppStateInterface {
+interface AppStateInteractor {
     fun readState(): Int
     fun writeState(state:Int)
     fun setNightMode()

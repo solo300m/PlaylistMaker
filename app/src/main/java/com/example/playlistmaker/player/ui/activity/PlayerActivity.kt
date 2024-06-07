@@ -7,17 +7,14 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.player.data.dto.DataService
-import com.example.playlistmaker.player.data.dto.ServiceMethod
-import com.example.playlistmaker.player.domain.api.MediaPlayerInterface
-import com.example.playlistmaker.player.domain.impl.MediaPlayerImpl
-import com.example.playlistmaker.player.domain.models.Track
+import com.example.playlistmaker.player.ui.utils.DataService
+import com.example.playlistmaker.player.ui.utils.ServiceMethod
+import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -42,11 +39,11 @@ class PlayerActivity : AppCompatActivity() {
 
     private var handler: Handler? = null
 
-   // private var player: MediaPlayerInterface = MediaPlayerImpl()
+    // private var player: MediaPlayerInterface = MediaPlayerImpl()
     private val service: ServiceMethod = DataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        var trackId = intent.getLongExtra("trackId", 0L)
+        /*var trackId = intent.getLongExtra("trackId", 0L)
         var trackName = intent.getStringExtra("trackName")
         var pictureUrl = intent.getStringExtra("trackPicture")
         var singerName = intent.getStringExtra("nameSinger")
@@ -55,9 +52,9 @@ class PlayerActivity : AppCompatActivity() {
         var countryName = intent.getStringExtra("country")
         var realiseDate = intent.getStringExtra("realiseDate")
         var genreName = intent.getStringExtra("genreName")
-        previewUrl = intent.getStringExtra("url").toString()
+        previewUrl = intent.getStringExtra("url").toString()*/
 
-        val currentTrack: Track = Track(
+        /*val currentTrack: Track = Track(
             trackId = trackId,
             trackName = trackName ?: "",
             artistName = singerName ?: "",
@@ -68,20 +65,31 @@ class PlayerActivity : AppCompatActivity() {
             primaryGenreName = genreName ?: "",
             country = countryName ?: "",
             previewUrl = previewUrl
-        )
+        )*/
         //Toast.makeText(this, "Track ${currentTrack.trackName} started!", Toast.LENGTH_LONG).show()
         //Toast.makeText(this,"URL: ${previewUrl}",Toast.LENGTH_LONG).show()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
 
-        if (currentTrack !== null) {
-            viewModelPlayer = ViewModelProvider(
-                this,
-                PlayerViewModel.getViewModelFactory(currentTrack)
-            )[PlayerViewModel::class.java]
-            viewModelPlayer.testViewModelPlayer()
-        }
+        viewModelPlayer = ViewModelProvider(
+            this,
+            PlayerViewModel.getViewModelFactory(intent)
+        )[PlayerViewModel::class.java]
+        viewModelPlayer.testViewModelPlayer()
+        val currentTrack = viewModelPlayer.getCurrentTrack()
+
+        val trackId = currentTrack.trackId
+        val trackName = currentTrack.trackName
+        val pictureUrl = currentTrack.artworkUrl100
+        val singerName = currentTrack.artistName
+        val longTimeT = currentTrack.trackTimeMillis
+        val albumT = currentTrack.collectionName
+        val countryName = currentTrack.country
+        val realiseDate = currentTrack.releaseDate
+        val genreName = currentTrack.primaryGenreName
+        val previewUrl = currentTrack.previewUrl
+
         viewModelPlayer.init()
         //player.init(currentTrack.previewUrl)
 
@@ -126,7 +134,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         playButton = findViewById(R.id.PlayButton)
 
-        if (viewModelPlayer.player is MediaPlayerImpl) {
+        if (viewModelPlayer.player is MediaPlayerInteractorImpl) {
             viewModelPlayer.preparePlayer()
             playButton.setOnClickListener {
                 viewModelPlayer.playbackControl()

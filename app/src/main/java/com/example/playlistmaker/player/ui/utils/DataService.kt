@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.data.dto
+package com.example.playlistmaker.player.ui.utils
 
 import android.content.Context
 import android.util.TypedValue

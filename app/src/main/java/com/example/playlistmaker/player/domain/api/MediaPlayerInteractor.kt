@@ -12,6 +12,7 @@ interface MediaPlayerInteractor {
     fun onDestroy()*/
     fun playbackControl()
     fun startPlayer()
+    fun stopPlayer()
     fun pausePlayer()
     fun getPlayer():MediaPlayer
     fun getStatus():Int

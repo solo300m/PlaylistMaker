@@ -28,6 +28,9 @@ class MediaPlayerInteractorImpl(intent: Intent, playerRepository:PlayerRepositor
         playerRep.startPlayer()
     }
 
+    override fun stopPlayer() {
+        playerRep.stopPlayer()
+    }
     override fun pausePlayer() {
         playerRep.pausePlayer()
     }

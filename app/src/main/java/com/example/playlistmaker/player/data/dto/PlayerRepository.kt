@@ -11,6 +11,7 @@ interface PlayerRepository {
     fun playbackControl()
     fun startPlayer()
     fun pausePlayer()
+    fun stopPlayer()
     fun getPlayer(): MediaPlayer
     fun getStatus():Int
 }

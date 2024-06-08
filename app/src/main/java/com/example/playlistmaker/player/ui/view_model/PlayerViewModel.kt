@@ -13,7 +13,7 @@ import com.example.playlistmaker.player.ui.utils.DataService
 import com.example.playlistmaker.player.ui.utils.ServiceMethod
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
-import com.example.playlistmaker.player.domain.impl.PlayerRepositoryImpl
+import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.models.Track
 
 class PlayerViewModel(
@@ -72,7 +72,9 @@ class PlayerViewModel(
     fun pausePlayer() {
         player.pausePlayer()
     }
-
+    fun stopPlayer(){
+        player.stopPlayer()
+    }
     fun getPlayer(): MediaPlayer {
         return player.getPlayer()
     }

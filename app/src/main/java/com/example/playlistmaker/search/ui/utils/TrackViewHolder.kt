@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.domain
+package com.example.playlistmaker.search.ui.utils
 
 import android.content.Context
 import android.util.TypedValue
@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.data.dto.TrackPreferences
+import com.example.playlistmaker.search.data.dto.SaveListRepositoryImpl
 import java.text.SimpleDateFormat
 
 import java.util.Locale
@@ -27,7 +27,7 @@ class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewH
     private val card: ConstraintLayout
     private val view: View
     private var trackId by Delegates.notNull<Long>()
-    private var objectSave = TrackPreferences() // объект класса TrackPreferences для обработки и сохранения клика на RecyclerView
+    private var objectSave = SaveListRepositoryImpl() // объект класса TrackPreferences для обработки и сохранения клика на RecyclerView
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
     }

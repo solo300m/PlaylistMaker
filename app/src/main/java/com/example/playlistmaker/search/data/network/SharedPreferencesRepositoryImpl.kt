@@ -1,33 +1,37 @@
-package com.example.playlistmaker.search.data.dto
+package com.example.playlistmaker.search.data.network
 
+import android.app.Activity
+import android.app.Application
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.playlistmaker.player.domain.models.Track
+import com.example.playlistmaker.search.data.dto.TRACK_LIST_KEY
 import com.example.playlistmaker.search.ui.activity.FindActivity
 import com.google.gson.Gson
 
-class SharedPreferencesImpl : SharedPreferencesInterface {
+class SharedPreferencesRepositoryImpl (application: Application): SharedPreferencesRepository {
 
-    override fun loadList(sharedPreferences: SharedPreferences) {
-        val tmpArray = read(sharedPreferences);
+    private val sharedPreferences = application.getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)
+    override fun loadList() {
+        val tmpArray = read();
         FindActivity.trackList.clear()
         FindActivity.trackList.addAll(tmpArray)
     }
 
-    override fun writeList(sharedPreferences: SharedPreferences) {
-        write(sharedPreferences, FindActivity.trackList)
+    override fun writeList() {
+        write(FindActivity.trackList)
     }
 
-    override fun clearTrackList(sharedPreferences: SharedPreferences) {
+    override fun clearTrackList() {
         FindActivity.trackList.clear()
         FindActivity.tracks.clear()
-        writeList(sharedPreferences)
+        writeList()
     }
-    private fun read(sharedPreferences: SharedPreferences): Array<Track> {
+    private fun read(): Array<Track> {
         val json = sharedPreferences.getString(TRACK_LIST_KEY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<Track>::class.java)
     }
     private fun write(
-        sharedPreferences: SharedPreferences,
         tracksList: List<Track>
     ) {
         val json = Gson().toJson(tracksList)

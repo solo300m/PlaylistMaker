@@ -2,7 +2,6 @@ package com.example.playlistmaker.search.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,24 +23,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.models.Track
 import com.example.playlistmaker.search.data.dto.ITunes
-import com.example.playlistmaker.search.domain.TrackAdapter
+import com.example.playlistmaker.search.ui.utils.TrackAdapter
 import com.example.playlistmaker.search.data.dto.TrackResponse
-import com.example.playlistmaker.search.domain.TrackViewHolder
+import com.example.playlistmaker.search.ui.utils.TrackViewHolder
 import com.example.playlistmaker.player.ui.activity.PlayerActivity
-import com.example.playlistmaker.search.data.dto.TRACK_LIST_KEY
-
-import com.example.playlistmaker.search.data.dto.TrackPreferences
-import com.example.playlistmaker.search.ui.view_model.SearchViewModel
-import com.google.gson.Gson
+import com.example.playlistmaker.search.ui.view_model.SearchViewModelImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
 
-    private lateinit var viewModelSearch: SearchViewModel
+    private lateinit var viewModelSearch: SearchViewModelImpl
 
     private lateinit var editText: EditText
     private lateinit var clearBtn: ImageView
@@ -57,7 +50,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private val adapter = TrackAdapter(tracks, this)
     private var input: String? = null
 
-    private lateinit var trackService:ITunes
+    private lateinit var trackService: ITunes
     private val searchRunnable =
         Runnable { onFindToInternet() } // Runnable объект для debonce поисковой строки
     private val handlerFind = Handler(Looper.getMainLooper()) // Handler главного IU потока
@@ -68,11 +61,11 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         setContentView(R.layout.activity_find)
 
         viewModelSearch = ViewModelProvider(
-            this, SearchViewModel.getViewModelFactory(
+            this, SearchViewModelImpl.getViewModelFactory(
             )
-        )[SearchViewModel::class.java]
+        )[SearchViewModelImpl::class.java]
         //viewModelSearch.toastDiagnostic("ViewModel is created!")
-        trackService = viewModelSearch.retrofit.getITunesClient()
+        trackService = viewModelSearch.getITunesClient()
 
         progressBar = findViewById(R.id.progressBar)
         titleFind = findViewById(R.id.titleFind)
@@ -259,7 +252,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)*///инициация SharedPreferences
         viewModelSearch.onFindToTrack(track.trackId.toLong())
         currentTrack = track;
-        val tmp = viewModelSearch.getTrackTmp()[0]
+        val tmp = viewModelSearch.getTracksTmp()[0]
         viewModelSearch.addTrackToList(tmp)
 
 
@@ -301,6 +294,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     companion object {
         val tracks = ArrayList<Track>()
         var trackList: MutableList<Track> = mutableListOf()
+
         //const val trackBaseURL = "https://itunes.apple.com"
         private const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
         var currentTrack: Track? = null

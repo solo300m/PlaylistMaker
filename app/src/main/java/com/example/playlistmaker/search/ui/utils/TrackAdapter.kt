@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.domain
+package com.example.playlistmaker.search.ui.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

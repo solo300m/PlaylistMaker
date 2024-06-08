@@ -1,28 +1,27 @@
 package com.example.playlistmaker.search.ui.view_model
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.data.dto.SaveListTrack
-import com.example.playlistmaker.search.data.dto.SharedPreferencesImpl
-import com.example.playlistmaker.search.data.dto.SharedPreferencesInterface
+import com.example.playlistmaker.search.data.dto.SaveListRepository
+import com.example.playlistmaker.search.data.network.SharedPreferencesRepositoryImpl
+import com.example.playlistmaker.search.data.network.SharedPreferencesRepository
 import com.example.playlistmaker.search.data.dto.TRACK_LIST_KEY
-import com.example.playlistmaker.search.data.dto.TrackPreferences
+import com.example.playlistmaker.search.data.dto.SaveListRepositoryImpl
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
     val retrofit: NetworkClient = RetrofitNetworkClient()
-    private val saveClient: SaveListTrack = TrackPreferences()
-    private val sharedPref: SharedPreferencesInterface = SharedPreferencesImpl()
+    private val saveClient: SaveListRepository = SaveListRepositoryImpl()
+    //private val sharedPref: SharedPreferencesRepository = SharedPreferencesRepositoryImpl(this[APPLICATION_KEY] as Activity)
     private val sharedPrefParam =
         application.getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)
     companion object {
@@ -33,14 +32,14 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
     //Функции интерфейса SharedPreferencesInterface
-    fun clearTrackList(){
-        sharedPref.clearTrackList(sharedPrefParam)
+    /*fun clearTrackList(){
+        sharedPrefParam.clearTrackList()
     }
     fun loadList(){
-        sharedPref.loadList(sharedPrefParam)
+        sharedPrefParam.loadList()
     }
     fun writeList(){
-        sharedPref.writeList(sharedPrefParam)
+        sharedPrefParam.writeList()
     }
 
     //Функции интерфейса SaveListTrack реализованные в конкретном классе реализации
@@ -59,5 +58,5 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
 
     fun toastDiagnostic(msg:String){
         Toast.makeText(this.getApplication(),"Text",Toast.LENGTH_LONG).show()
-    }
+    }*/
 }

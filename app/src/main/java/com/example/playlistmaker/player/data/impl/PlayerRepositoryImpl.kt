@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.domain.impl
+package com.example.playlistmaker.player.data.impl
 
 import android.content.Intent
 import android.media.MediaPlayer
@@ -65,12 +65,20 @@ class PlayerRepositoryImpl(intent:Intent) : PlayerRepository {
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
+            STATE_DEFAULT ->{
+                stopPlayer()
+            }
         }
     }
 
     override fun startPlayer() {
         mediaPlayer.start()
         playerState = STATE_PLAYING
+    }
+
+    override fun stopPlayer() {
+        mediaPlayer.stop()
+        playerState = STATE_DEFAULT
     }
 
     override fun pausePlayer() {

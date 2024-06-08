@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -97,6 +98,7 @@ class PlayerActivity : AppCompatActivity() {
 
         backButton = findViewById(R.id.backPlayer)
         backButton.setOnClickListener {
+            viewModelPlayer.stopPlayer()
             finish()
         }
 
@@ -143,6 +145,7 @@ class PlayerActivity : AppCompatActivity() {
                     timeSet()
                 } else {
                     playButton.setImageResource(R.drawable.playbutton)
+                    Toast.makeText(this, "Status ${viewModelPlayer.getStatus()}",Toast.LENGTH_LONG).show()
                 }
             }
 

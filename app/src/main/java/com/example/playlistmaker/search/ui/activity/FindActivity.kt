@@ -46,8 +46,8 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private lateinit var titleFind: TextView//заголовок сохраненного списка
     private lateinit var clearButtonFind: Button//кнопка очистки списка сохраненных треков
     private lateinit var progressBar: ProgressBar // виджет ProgressBar
+    private lateinit var adapter: TrackAdapter
 
-    private val adapter = TrackAdapter(tracks, this)
     private var input: String? = null
 
     private lateinit var trackService: ITunes
@@ -64,23 +64,26 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             this, SearchViewModelImpl.getViewModelFactory(
             )
         )[SearchViewModelImpl::class.java]
-        //viewModelSearch.toastDiagnostic("ViewModel is created!")
+
         trackService = viewModelSearch.getITunesClient()
 
         progressBar = findViewById(R.id.progressBar)
         titleFind = findViewById(R.id.titleFind)
         clearButtonFind = findViewById(R.id.clearFind)
 
-        /*val sharedPref =
-            getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)*///инициация SharedPreferences
         viewModelSearch.loadList() // загрузка сохраненного списка из sharedPreferences
-        if (trackList.isNotEmpty()) {
-            tracks.clear()
-            tracks.addAll(trackList.reversed())// загрузка сохраненного списка из sharedPreferences в реверсивном виде
+        if (viewModelSearch.trackList.value?.isNotEmpty() == true) {
+            viewModelSearch.tracks.value?.clear()
+            viewModelSearch.trackList.value?.reversed().let {
+                if (it != null) {
+                    viewModelSearch.tracks.value?.addAll(it)
+                }
+            } // загрузка сохраненного списка из sharedPreferences в реверсивном виде
             onTitleAndButton()
         } else {
             offTitleAndButton()
         }
+        adapter = viewModelSearch.tracks.value.let { TrackAdapter(it!!, this) }
 
         codeRequest200 = findViewById(R.id.placeholder_200)
         codeRequest500 = findViewById(R.id.placeholder_500)
@@ -120,7 +123,6 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
             }
         }
         editText.addTextChangedListener(simpleTextWatcher)
@@ -134,11 +136,18 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private fun cleanTextLine() {
         editText.setText("")
         input = ""
-        tracks.clear()
+        viewModelSearch.tracks.value?.clear()
         viewModelSearch.writeList() //сохранение списка в sharedPreferences
         viewModelSearch.loadList() //загрузка из sharedPreferences
-        if (trackList.isNotEmpty()) {
-            tracks.addAll(trackList.reversed()) //reversed для обеспечения первой позиции последней запрошенной записи
+        if (viewModelSearch.trackList.value?.isNotEmpty() == true) {
+            viewModelSearch.trackList.value?.reversed().let {
+                if (it != null) {
+                    if (it.isNotEmpty()) {
+                        viewModelSearch.tracks.value?.addAll(it)
+                    }
+                }
+            }
+            //reversed для обеспечения первой позиции последней запрошенной записи
             recyclerView.visibility = View.VISIBLE
             onTitleAndButton()
         }
@@ -169,29 +178,33 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                     progressBar.visibility = View.GONE
 
                     if (response.code() == 200) {
-                        tracks.clear()
+                        viewModelSearch.tracks.value?.clear()
                         val resp = response.body()?.results;
                         if (resp?.isNotEmpty() == true) {
                             if (codeRequest500.visibility == View.VISIBLE) {
                                 codeRequest500.visibility = View.GONE
                             }
-                            tracks.addAll(resp)
+                            viewModelSearch.tracks.value?.addAll(resp)
                             recyclerView.visibility = View.VISIBLE
                             recyclerView.adapter?.notifyDataSetChanged()
 
                         }
-                        if (tracks.isEmpty()) {
+                        if (viewModelSearch.tracks.value?.isEmpty() == true) {
                             recyclerView.visibility = View.GONE
                             codeRequest200.visibility = View.VISIBLE
                         } else {
-                            if (tracks.isEmpty() && trackList.isNotEmpty()) {
-                                tracks.addAll(trackList.reversed())
+                            if (viewModelSearch.tracks.value?.isEmpty() == true && viewModelSearch.trackList.value?.isNotEmpty() == true) {
+                                viewModelSearch.trackList.value?.reversed().let {
+                                    if (it != null) {
+                                        viewModelSearch.tracks.value?.addAll(it)
+                                    }
+                                }
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
-                            } else if (tracks.isNotEmpty()) {
+                            } else if (viewModelSearch.tracks.value?.isNotEmpty() == true) {
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
-                            } else if (tracks.isEmpty() && trackList.isEmpty()) {
+                            } else if (viewModelSearch.tracks.value?.isEmpty() == true && viewModelSearch.trackList.value?.isEmpty() == true) {
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
                             }
@@ -270,7 +283,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             intent.putExtra("genreName", track.primaryGenreName)
         }
         startActivity(intent)
-        if (trackList.isNotEmpty()) {
+        if (viewModelSearch.trackList.value?.isNotEmpty() == true) {
             viewModelSearch.writeList() //сохранение списка в sharedPreferences
             viewModelSearch.loadList() //загрузка из sharedPreferences
             recyclerView.adapter?.notifyDataSetChanged()
@@ -292,10 +305,6 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     }
 
     companion object {
-        val tracks = ArrayList<Track>()
-        var trackList: MutableList<Track> = mutableListOf()
-
-        //const val trackBaseURL = "https://itunes.apple.com"
         private const val TEXT_VIEW_KEY = "TEXT_VIEW_KEY"
         var currentTrack: Track? = null
         private const val SEARCH_DELAY = 2000L

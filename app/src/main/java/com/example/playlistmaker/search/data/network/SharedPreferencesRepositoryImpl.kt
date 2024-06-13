@@ -12,20 +12,20 @@ import com.google.gson.Gson
 class SharedPreferencesRepositoryImpl (application: Application): SharedPreferencesRepository {
 
     private val sharedPreferences = application.getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)
-    override fun loadList() {
+    override fun loadList(trackList:MutableList<Track>) {
         val tmpArray = read();
-        FindActivity.trackList.clear()
-        FindActivity.trackList.addAll(tmpArray)
+        trackList.clear()
+        trackList.addAll(tmpArray)
     }
 
-    override fun writeList() {
-        write(FindActivity.trackList)
+    override fun writeList(trackList:MutableList<Track>) {
+        write(trackList)
     }
 
-    override fun clearTrackList() {
-        FindActivity.trackList.clear()
-        FindActivity.tracks.clear()
-        writeList()
+    override fun clearTrackList(trackList:MutableList<Track>, tracks:MutableList<Track>) {
+        trackList.clear()
+        tracks.clear()
+        writeList(trackList)
     }
     private fun read(): Array<Track> {
         val json = sharedPreferences.getString(TRACK_LIST_KEY, null) ?: return emptyArray()

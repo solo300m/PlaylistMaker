@@ -3,6 +3,7 @@ package com.example.playlistmaker.search.ui.view_model
 import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
@@ -19,17 +20,31 @@ import com.example.playlistmaker.search.domain.SearchInteractorImpl
 class SearchViewModelImpl(
     application: Application,
     private val searchInteractor: SearchInteractor,
-):AndroidViewModel(application) {
+) : AndroidViewModel(application) {
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                SearchViewModelImpl(this[APPLICATION_KEY] as Application, searchInteractor = SearchInteractorImpl(
-                    saveListRepository = SaveListRepositoryImpl(),
-                    networkClient = RetrofitNetworkClient(),
-                    sharedPreferencesRepository = SharedPreferencesRepositoryImpl(this[APPLICATION_KEY] as Application)
-                ))
+                SearchViewModelImpl(
+                    this[APPLICATION_KEY] as Application, searchInteractor = SearchInteractorImpl(
+                        saveListRepository = SaveListRepositoryImpl(),
+                        networkClient = RetrofitNetworkClient(),
+                        sharedPreferencesRepository = SharedPreferencesRepositoryImpl(this[APPLICATION_KEY] as Application)
+                    )
+                )
             }
         }
+    }
+
+    val tracks = MutableLiveData<MutableList<Track>>()
+
+    init {
+        tracks.value = mutableListOf()
+    }
+
+    val trackList = MutableLiveData<MutableList<Track>>()
+
+    init {
+        trackList.value = mutableListOf()
     }
 
     //Функции интерфейса SharedPreferencesInterface
@@ -38,15 +53,15 @@ class SearchViewModelImpl(
     }
 
     fun addTrackToList(unit: Track) {
-        searchInteractor.addTrackToList(unit)
+        trackList.value?.let { searchInteractor.addTrackToList(it, unit) }
     }
 
     fun onFindToTrack(input: Long) {
-        searchInteractor.onFindToTrack(input)
+        tracks.value?.let { searchInteractor.onFindToTrack(it, input) }
     }
 
     fun getTrack(input: Long): Track? {
-        return searchInteractor.getTrack(input)
+        return tracks.value?.let { searchInteractor.getTrack(it, input) }
     }
 
     fun doRequest(dto: String): Response {
@@ -58,14 +73,21 @@ class SearchViewModelImpl(
     }
 
     fun clearTrackList() {
-        searchInteractor.clearTrackList()
+        trackList.value?.let {
+            tracks.value?.let { it1 ->
+                searchInteractor.clearTrackList(
+                    it,
+                    it1
+                )
+            }
+        }
     }
 
     fun loadList() {
-        searchInteractor.loadList()
+        trackList.value?.let { searchInteractor.loadList(it) }
     }
 
     fun writeList() {
-        searchInteractor.writeList()
+        trackList.value?.let { searchInteractor.writeList(it) }
     }
 }

@@ -17,16 +17,16 @@ class SearchInteractorImpl(
         return saveListRepository.getTracksTmp()
     }
 
-    override fun addTrackToList(unit: Track) {
-        saveListRepository.addTrackToList(unit)
+    override fun addTrackToList(trackList:MutableList<Track>, unit: Track) {
+        saveListRepository.addTrackToList(trackList, unit)
     }
 
-    override fun onFindToTrack(input: Long) {
-        saveListRepository.onFindToTrack(input)
+    override fun onFindToTrack(tracks:MutableList<Track>, input: Long) {
+        saveListRepository.onFindToTrack(tracks, input)
     }
 
-    override fun getTrack(input: Long): Track? {
-        return saveListRepository.getTrack(input)
+    override fun getTrack(tracks:MutableList<Track>, input: Long): Track? {
+        return saveListRepository.getTrack(tracks, input)
     }
 
     override fun doRequest(dto: String): Response {
@@ -37,15 +37,15 @@ class SearchInteractorImpl(
         return networkClient.getITunesClient()
     }
 
-    override fun clearTrackList() {
-        sharedPreferencesRepository.clearTrackList()
+    override fun clearTrackList(trackList:MutableList<Track>, tracks:MutableList<Track>) {
+        sharedPreferencesRepository.clearTrackList(trackList, tracks)
     }
 
-    override fun loadList() {
-        sharedPreferencesRepository.loadList()
+    override fun loadList(trackList:MutableList<Track>) {
+        sharedPreferencesRepository.loadList(trackList)
     }
 
-    override fun writeList() {
-        sharedPreferencesRepository.writeList()
+    override fun writeList(trackList:MutableList<Track>) {
+        sharedPreferencesRepository.writeList(trackList)
     }
 }

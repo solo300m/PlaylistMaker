@@ -23,7 +23,7 @@ class PlayerViewModel(
 
 
     var player: MediaPlayerInteractor = MediaPlayerInteractorImpl(intent, PlayerRepositoryImpl(intent))
-    private val service: ServiceMethod = DataService()
+    //private val service: ServiceMethod = DataService()
     private val currentTrack = player.getCurrentTrack()
 
     //private val track = currentTrack
@@ -55,12 +55,6 @@ class PlayerViewModel(
         player.preparePlayer()
     }
 
-    /*fun onPause(){
-        player.onPause()
-    }
-    fun onDestroy(){
-        player.onDestroy()
-    }*/
     fun playbackControl() {
         player.playbackControl()
     }

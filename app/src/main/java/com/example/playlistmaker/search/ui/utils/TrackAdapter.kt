@@ -8,10 +8,10 @@ import com.example.playlistmaker.player.domain.models.Track
 
 class TrackAdapter(private val list: List<Track>, listener: TrackViewHolder.Listener):RecyclerView.Adapter<TrackViewHolder>() {
     val lis = listener
-
+    val tracks = list as MutableList
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_cart, parent,false)
-        return TrackViewHolder(view, lis)
+        return TrackViewHolder(view, lis, tracks)
     }
 
     override fun getItemCount(): Int {

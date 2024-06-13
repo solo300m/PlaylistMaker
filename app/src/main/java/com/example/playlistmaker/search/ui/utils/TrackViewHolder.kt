@@ -18,7 +18,7 @@ import java.util.Locale
 import kotlin.properties.Delegates
 
 
-class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewHolder(parentView) {
+class TrackViewHolder(parentView: View, listener: Listener, tracks:MutableList<Track>) : RecyclerView.ViewHolder(parentView) {
     private val trackName: TextView
     private val authorTrace: TextView
     private val timeTrack: TextView
@@ -27,7 +27,7 @@ class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewH
     private val card: ConstraintLayout
     private val view: View
     private var trackId by Delegates.notNull<Long>()
-    private var objectSave = SaveListRepositoryImpl() // объект класса TrackPreferences для обработки и сохранения клика на RecyclerView
+    //private var objectSave = SaveListRepositoryImpl() // объект класса TrackPreferences для обработки и сохранения клика на RecyclerView
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
     }
@@ -42,7 +42,8 @@ class TrackViewHolder(parentView: View, listener: Listener) : RecyclerView.ViewH
         view = parentView
 
         card.setOnClickListener { // обработка события Click на карточки трека RecyclerView
-            val track = objectSave.getTrack(trackId.toLong())
+            val track = tracks.find { it.trackId == trackId}
+            //val track = objectSave.getTrack(trackId.toLong())
             if (track != null) {
                 listener.onClick(track)
             }

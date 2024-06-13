@@ -40,35 +40,10 @@ class PlayerActivity : AppCompatActivity() {
 
     private var handler: Handler? = null
 
-    // private var player: MediaPlayerInterface = MediaPlayerImpl()
     private val service: ServiceMethod = DataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        /*var trackId = intent.getLongExtra("trackId", 0L)
-        var trackName = intent.getStringExtra("trackName")
-        var pictureUrl = intent.getStringExtra("trackPicture")
-        var singerName = intent.getStringExtra("nameSinger")
-        var longTimeT = intent.getLongExtra("longTime", 0L)
-        var albumT = intent.getStringExtra("album")
-        var countryName = intent.getStringExtra("country")
-        var realiseDate = intent.getStringExtra("realiseDate")
-        var genreName = intent.getStringExtra("genreName")
-        previewUrl = intent.getStringExtra("url").toString()*/
 
-        /*val currentTrack: Track = Track(
-            trackId = trackId,
-            trackName = trackName ?: "",
-            artistName = singerName ?: "",
-            trackTimeMillis = longTimeT,
-            artworkUrl100 = pictureUrl ?: "",
-            collectionName = albumT ?: "",
-            releaseDate = realiseDate ?: "",
-            primaryGenreName = genreName ?: "",
-            country = countryName ?: "",
-            previewUrl = previewUrl
-        )*/
-        //Toast.makeText(this, "Track ${currentTrack.trackName} started!", Toast.LENGTH_LONG).show()
-        //Toast.makeText(this,"URL: ${previewUrl}",Toast.LENGTH_LONG).show()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
@@ -77,7 +52,7 @@ class PlayerActivity : AppCompatActivity() {
             this,
             PlayerViewModel.getViewModelFactory(intent)
         )[PlayerViewModel::class.java]
-        viewModelPlayer.testViewModelPlayer()
+        //viewModelPlayer.testViewModelPlayer()
         val currentTrack = viewModelPlayer.getCurrentTrack()
 
         val trackId = currentTrack.trackId
@@ -145,7 +120,7 @@ class PlayerActivity : AppCompatActivity() {
                     timeSet()
                 } else {
                     playButton.setImageResource(R.drawable.playbutton)
-                    Toast.makeText(this, "Status ${viewModelPlayer.getStatus()}",Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, "Status ${viewModelPlayer.getStatus()}",Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -188,5 +163,3 @@ class PlayerActivity : AppCompatActivity() {
         private const val DELAY = 1000L
     }
 }
-
-//}

@@ -1,8 +1,6 @@
 package com.example.playlistmaker.search.data.dto
 // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.ui.activity.FindActivity.Companion.trackList
-import com.example.playlistmaker.search.ui.activity.FindActivity.Companion.tracks
 import kotlin.collections.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 sings"
@@ -16,7 +14,7 @@ class SaveListRepositoryImpl : SaveListRepository{ // класс для обра
         return trackTmp
     }
 
-    override fun addTrackToList(unit: Track) { // формирование ограниченного списка сохраненных треков
+    override fun addTrackToList(trackList:MutableList<Track>, unit: Track) { // формирование ограниченного списка сохраненных треков
         var idx = -1
         for (i in 0..trackList.size - 1) {
             if (trackList[i] == unit) {
@@ -35,7 +33,7 @@ class SaveListRepositoryImpl : SaveListRepository{ // класс для обра
         }
     }
 
-    override fun onFindToTrack(input: Long) { // поиск трека по клику на позиции в RecyclerView
+    override fun onFindToTrack(tracks:MutableList<Track>, input: Long) { // поиск трека по клику на позиции в RecyclerView
         if (trackTmp.isNotEmpty()) {
             trackTmp.clear()
         }
@@ -46,6 +44,6 @@ class SaveListRepositoryImpl : SaveListRepository{ // класс для обра
                 trackTmp.add(findTrack)
         }
     }
-    override fun getTrack(input: Long): Track? = tracks.find { it.trackId == input }
+    override fun getTrack(tracks:MutableList<Track>, input: Long): Track? = tracks.find { it.trackId == input }
 
 }

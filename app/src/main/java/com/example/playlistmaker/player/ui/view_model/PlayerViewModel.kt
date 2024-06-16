@@ -9,11 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.player.ui.utils.DataService
-import com.example.playlistmaker.player.ui.utils.ServiceMethod
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
-import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
-import com.example.playlistmaker.player.data.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.models.Track
 
 class PlayerViewModel(
@@ -22,9 +19,9 @@ class PlayerViewModel(
 ) : AndroidViewModel(application) {
 
 
-    var player: MediaPlayerInteractor = MediaPlayerInteractorImpl(intent, PlayerRepositoryImpl(intent))
+    var player: MediaPlayerInteractor = Creator.getPlayerInteractor()
     //private val service: ServiceMethod = DataService()
-    private val currentTrack = player.getCurrentTrack()
+    private val currentTrack = player.getCurrentTrack(intent)
 
     //private val track = currentTrack
     companion object {

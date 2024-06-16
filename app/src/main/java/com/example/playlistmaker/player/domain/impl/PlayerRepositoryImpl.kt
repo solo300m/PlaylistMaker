@@ -1,17 +1,17 @@
-package com.example.playlistmaker.player.data.impl
+package com.example.playlistmaker.player.domain.impl
 
 import android.content.Intent
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.data.dto.PlayerRepository
+import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.models.Track
 
-class PlayerRepositoryImpl(intent:Intent) : PlayerRepository {
-    private val intent:Intent = intent
+class PlayerRepositoryImpl() : PlayerRepository {
+    //private val intent:Intent = intent
     private var previewUrl: String = ""
     private val mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
 
-    override fun getCurrentTrack(): Track {
+    override fun getCurrentTrack(intent: Intent): Track {
         val trackId = intent.getLongExtra("trackId", 0L)
         val trackName = intent.getStringExtra("trackName").toString()
         val pictureUrl = intent.getStringExtra("trackPicture").toString()

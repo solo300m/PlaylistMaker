@@ -5,7 +5,7 @@ import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.models.Track
 
 interface MediaPlayerInteractor {
-    fun getCurrentTrack(): Track
+    fun getCurrentTrack(intent:Intent): Track
     fun init(expression:String)
     fun preparePlayer()
     /*fun onPause()

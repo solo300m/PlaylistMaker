@@ -1,4 +1,4 @@
-package com.example.playlistmaker.main.ui.activity
+package com.example.playlistmaker
 
 import android.app.Application
 import com.example.playlistmaker.creator.Creator

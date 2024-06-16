@@ -1,17 +1,18 @@
-package com.example.playlistmaker.search.data.network
+package com.example.playlistmaker.search.domain.impl
 
-import android.app.Activity
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.data.dto.TRACK_LIST_KEY
-import com.example.playlistmaker.search.ui.activity.FindActivity
+import com.example.playlistmaker.search.domain.api.SharedPreferencesRepository
 import com.google.gson.Gson
 
 class SharedPreferencesRepositoryImpl (application: Application): SharedPreferencesRepository {
 
+
     private val sharedPreferences = application.getSharedPreferences(TRACK_LIST_KEY, MODE_PRIVATE)
+
     override fun loadList(trackList:MutableList<Track>) {
         val tmpArray = read();
         trackList.clear()

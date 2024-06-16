@@ -1,6 +1,5 @@
 package com.example.playlistmaker.search.ui.view_model
 
-import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -8,14 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.models.Track
 import com.example.playlistmaker.search.data.dto.ITunes
 import com.example.playlistmaker.search.data.dto.Response
-import com.example.playlistmaker.search.data.dto.SaveListRepositoryImpl
-import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.search.data.network.SharedPreferencesRepositoryImpl
-import com.example.playlistmaker.search.domain.SearchInteractor
-import com.example.playlistmaker.search.domain.SearchInteractorImpl
+import com.example.playlistmaker.search.domain.api.SearchInteractor
 
 class SearchViewModelImpl(
     application: Application,
@@ -23,13 +19,19 @@ class SearchViewModelImpl(
 ) : AndroidViewModel(application) {
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
+            /*initializer {
                 SearchViewModelImpl(
                     this[APPLICATION_KEY] as Application, searchInteractor = SearchInteractorImpl(
                         saveListRepository = SaveListRepositoryImpl(),
                         networkClient = RetrofitNetworkClient(),
                         sharedPreferencesRepository = SharedPreferencesRepositoryImpl(this[APPLICATION_KEY] as Application)
                     )
+                )
+            }*/
+            initializer {
+                SearchViewModelImpl(
+                    this[APPLICATION_KEY] as Application,
+                    Creator.getSearchInteractor(this[APPLICATION_KEY] as Application)
                 )
             }
         }

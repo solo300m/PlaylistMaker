@@ -1,12 +1,13 @@
-package com.example.playlistmaker.search.data.dto
+package com.example.playlistmaker.search.domain.impl
 // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
 import com.example.playlistmaker.player.domain.models.Track
+import com.example.playlistmaker.search.domain.api.SaveListRepository
 import kotlin.collections.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 sings"
 const val LIMIT_SAVE_LIST: Int = 10
 
-class SaveListRepositoryImpl : SaveListRepository{ // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
+class SaveListRepositoryImpl : SaveListRepository { // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
     private val trackTmp =
         ArrayList<Track>() //временная переменная для сохранения Track на которой был осуществлен клик
 

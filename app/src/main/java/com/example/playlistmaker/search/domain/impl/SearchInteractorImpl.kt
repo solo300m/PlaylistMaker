@@ -1,11 +1,12 @@
-package com.example.playlistmaker.search.domain
+package com.example.playlistmaker.search.domain.impl
 
 import com.example.playlistmaker.player.domain.models.Track
 import com.example.playlistmaker.search.data.dto.ITunes
 import com.example.playlistmaker.search.data.dto.Response
-import com.example.playlistmaker.search.data.dto.SaveListRepository
-import com.example.playlistmaker.search.data.network.NetworkClient
-import com.example.playlistmaker.search.data.network.SharedPreferencesRepository
+import com.example.playlistmaker.search.domain.api.SaveListRepository
+import com.example.playlistmaker.search.domain.api.NetworkClient
+import com.example.playlistmaker.search.domain.api.SearchInteractor
+import com.example.playlistmaker.search.domain.api.SharedPreferencesRepository
 
 class SearchInteractorImpl(
     private val saveListRepository: SaveListRepository,

@@ -1,15 +1,14 @@
-package com.example.playlistmaker.player.domain.impl
+package com.example.playlistmaker.player.domain
 
-import android.content.Intent
-import android.media.MediaPlayer
+import com.example.playlistmaker.player.domain.models.IntentData
+import com.example.playlistmaker.player.domain.models.PlayerData
 import com.example.playlistmaker.player.domain.api.PlayerRepository
-import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.models.Track
 
 class MediaPlayerInteractorImpl(playerRepository: PlayerRepository) : MediaPlayerInteractor {
     private val playerRep = playerRepository
-    override fun getCurrentTrack(intent: Intent): Track {
-       return playerRep.getCurrentTrack(intent)
+    override fun getCurrentTrack(locIntent: IntentData): Track? {
+       return locIntent?.let { playerRep.getCurrentTrack(it) }
     }
 
     override fun init(expression: String) {
@@ -35,11 +34,11 @@ class MediaPlayerInteractorImpl(playerRepository: PlayerRepository) : MediaPlaye
         playerRep.pausePlayer()
     }
 
-    override fun getPlayer(): MediaPlayer {
+    override fun getPlayer(): PlayerData {
         return playerRep.getPlayer()
     }
 
-    override fun getStatus(): Int {
+    override fun getStatus(): Int? {
         return playerRep.getStatus()
     }
 

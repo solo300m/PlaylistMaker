@@ -1,6 +1,5 @@
-package com.example.playlistmaker.search.domain.api
+package com.example.playlistmaker.search.data
 
-import android.content.SharedPreferences
 import com.example.playlistmaker.player.domain.models.Track
 
 interface SharedPreferencesRepository {

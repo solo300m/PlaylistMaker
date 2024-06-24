@@ -1,7 +1,7 @@
-package com.example.playlistmaker.search.domain.impl
+package com.example.playlistmaker.search.data
 // класс для обработки операций по сохранению в sharedPreferences списков tracks и trackList
+
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.domain.api.SaveListRepository
 import kotlin.collections.ArrayList
 
 const val TRACK_LIST_KEY: String = "list of 10 sings"

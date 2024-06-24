@@ -1,76 +1,80 @@
 package com.example.playlistmaker.player.ui.view_model
 
 import android.app.Application
-import android.content.Intent
-import android.media.MediaPlayer
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.example.playlistmaker.player.domain.models.IntentData
+import com.example.playlistmaker.player.domain.models.PlayerData
+import com.example.playlistmaker.player.domain.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.models.Track
+import com.example.playlistmaker.search.domain.model.TrackPlayModel
 
 class PlayerViewModel(
-    intent: Intent,
+    locIntent: IntentData,
     application: Application
 ) : AndroidViewModel(application) {
 
 
-    var player: MediaPlayerInteractor = Creator.getPlayerInteractor()
-    //private val service: ServiceMethod = DataService()
-    private val currentTrack = player.getCurrentTrack(intent)
+    private var player: MediaPlayerInteractor = Creator.getPlayerInteractor()
 
-    //private val track = currentTrack
+    private val currentTrack = player.getCurrentTrack(locIntent)
+    var trackAndPlayer:TrackPlayModel = TrackPlayModel(currentTrack, player)
+
     companion object {
-        fun getViewModelFactory(intent: Intent): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(intent = intent, this[APPLICATION_KEY] as Application)
+        fun getViewModelFactory(locIntent: IntentData): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    PlayerViewModel(locIntent = locIntent, this[APPLICATION_KEY] as Application)
+                }
             }
-        }
     }
-
-    fun getCurrentTrack(): Track {
-        return currentTrack
+    private val playTrack = MutableLiveData(trackAndPlayer)
+    init {
+        val tmpTrack:Track? = getCurrentTrack()
+        if (tmpTrack != null)
+            playTrack.value?.track = tmpTrack
     }
+    fun getTrackPlayLiveData(): LiveData<TrackPlayModel> = playTrack
 
-    fun testViewModelPlayer() {
-        Toast.makeText(
-            getApplication(),
-            "Запущен трек с ID ${currentTrack.trackId}",
-            Toast.LENGTH_LONG
-        ).show()
+    fun getCurrentTrack(): Track? {
+        return playTrack.value?.track
     }
 
     fun init() {
-        player.init(currentTrack.previewUrl)
+        playTrack.value?.track?.let { playTrack.value?.playerInteractor?.init(it.previewUrl) }
     }
 
     fun preparePlayer() {
-        player.preparePlayer()
+        playTrack.value?.playerInteractor?.preparePlayer()
     }
 
     fun playbackControl() {
-        player.playbackControl()
+        playTrack.value?.playerInteractor?.playbackControl()
     }
 
     fun startPlayer() {
-        player.startPlayer()
+        playTrack.value?.playerInteractor?.startPlayer()
     }
 
     fun pausePlayer() {
-        player.pausePlayer()
-    }
-    fun stopPlayer(){
-        player.stopPlayer()
-    }
-    fun getPlayer(): MediaPlayer {
-        return player.getPlayer()
+        playTrack.value?.playerInteractor?.pausePlayer()
     }
 
-    fun getStatus(): Int {
+    fun stopPlayer() {
+        playTrack.value?.playerInteractor?.stopPlayer()
+    }
+
+    fun getPlayer(): PlayerData? {
+        return playTrack.value?.playerInteractor?.getPlayer()
+    }
+
+    fun getStatus(): Int? {
         return player.getStatus()
     }
 }

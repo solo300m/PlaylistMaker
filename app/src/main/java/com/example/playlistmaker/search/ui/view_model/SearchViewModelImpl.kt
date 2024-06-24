@@ -2,6 +2,7 @@ package com.example.playlistmaker.search.ui.view_model
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -9,9 +10,11 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.data.dto.ITunes
-import com.example.playlistmaker.search.data.dto.Response
-import com.example.playlistmaker.search.domain.api.SearchInteractor
+import com.example.playlistmaker.search.domain.model.TracksListModel
+import com.example.playlistmaker.player.domain.models.TracksModel
+import com.example.playlistmaker.search.domain.model.ITunes
+import com.example.playlistmaker.search.domain.model.Response
+import com.example.playlistmaker.search.domain.SearchInteractor
 
 class SearchViewModelImpl(
     application: Application,
@@ -37,33 +40,40 @@ class SearchViewModelImpl(
         }
     }
 
-    val tracks = MutableLiveData<MutableList<Track>>()
-
+    val tracks = MutableLiveData<TracksModel>()
     init {
-        tracks.value = mutableListOf()
+            val tmpTrackModel = TracksModel()
+            //tracks.value?.tracks = mutableListOf()
+            tracks.value = tmpTrackModel
+            //tracks.value?.statusTracks = false
     }
 
-    val trackList = MutableLiveData<MutableList<Track>>()
-
+    fun getTracksLiveData():LiveData<TracksModel> = tracks
+    val trackList = MutableLiveData<TracksListModel>()
     init {
-        trackList.value = mutableListOf()
+            val tmpTracksListModel = TracksListModel()
+            //trackList.value?.trackList = mutableListOf()
+            trackList.value = tmpTracksListModel
+            //trackList.value?.statusTracksList = false
     }
-
+    fun getTrackListLiveData():LiveData<TracksListModel> = trackList
     //Функции интерфейса SharedPreferencesInterface
     fun getTracksTmp(): ArrayList<Track> {
         return searchInteractor.getTracksTmp()
     }
 
     fun addTrackToList(unit: Track) {
-        trackList.value?.let { searchInteractor.addTrackToList(it, unit) }
+        trackList.value?.trackList?.let { searchInteractor.addTrackToList(it, unit) }
+        if(trackList.value?.statusTracksList == false)
+            trackList.value?.statusTracksList = true
     }
 
     fun onFindToTrack(input: Long) {
-        tracks.value?.let { searchInteractor.onFindToTrack(it, input) }
+        tracks.value?.tracks?.let { searchInteractor.onFindToTrack(it, input) }
     }
 
     fun getTrack(input: Long): Track? {
-        return tracks.value?.let { searchInteractor.getTrack(it, input) }
+        return tracks.value?.tracks?.let { searchInteractor.getTrack(it, input) }
     }
 
     fun doRequest(dto: String): Response {
@@ -75,21 +85,25 @@ class SearchViewModelImpl(
     }
 
     fun clearTrackList() {
-        trackList.value?.let {
-            tracks.value?.let { it1 ->
+        trackList.value?.trackList?.let {
+            tracks.value?.tracks?.let { it1 ->
                 searchInteractor.clearTrackList(
                     it,
                     it1
                 )
             }
         }
+        tracks.value?.statusTracks = false
+        trackList.value?.statusTracksList = false
     }
 
     fun loadList() {
-        trackList.value?.let { searchInteractor.loadList(it) }
+        trackList.value?.trackList?.let { searchInteractor.loadList(it) }
+        trackList.value?.statusTracksList = true
     }
 
     fun writeList() {
-        trackList.value?.let { searchInteractor.writeList(it) }
+        trackList.value?.trackList?.let { searchInteractor.writeList(it) }
+        //trackList.value?.statusTracksList = false
     }
 }

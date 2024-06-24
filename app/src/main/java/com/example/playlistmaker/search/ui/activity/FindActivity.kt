@@ -17,12 +17,15 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.data.dto.ITunes
+import com.example.playlistmaker.search.domain.model.TracksListModel
+import com.example.playlistmaker.player.domain.models.TracksModel
+import com.example.playlistmaker.search.domain.model.ITunes
 import com.example.playlistmaker.search.ui.utils.TrackAdapter
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.ui.utils.TrackViewHolder
@@ -51,6 +54,8 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private var input: String? = null
 
     private lateinit var trackService: ITunes
+    private lateinit var tracks:LiveData<TracksModel>
+    private  lateinit var trackList:LiveData<TracksListModel>
     private val searchRunnable =
         Runnable { onFindToInternet() } // Runnable объект для debonce поисковой строки
     private val handlerFind = Handler(Looper.getMainLooper()) // Handler главного IU потока
@@ -65,6 +70,16 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             )
         )[SearchViewModelImpl::class.java]
 
+        viewModelSearch.getTrackListLiveData().observe(this){
+            trackList = viewModelSearch.getTrackListLiveData()
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
+
+        viewModelSearch.getTracksLiveData().observe(this){
+            tracks = viewModelSearch.getTracksLiveData()
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
+
         trackService = viewModelSearch.getITunesClient()
 
         progressBar = findViewById(R.id.progressBar)
@@ -72,18 +87,23 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
         clearButtonFind = findViewById(R.id.clearFind)
 
         viewModelSearch.loadList() // загрузка сохраненного списка из sharedPreferences
-        if (viewModelSearch.trackList.value?.isNotEmpty() == true) {
-            viewModelSearch.tracks.value?.clear()
-            viewModelSearch.trackList.value?.reversed().let {
+        if (viewModelSearch.trackList.value?.trackList?.isNotEmpty() == true) {
+            viewModelSearch.tracks.value?.tracks?.clear()
+            viewModelSearch.tracks.value?.statusTracks = false
+            viewModelSearch.trackList.value?.trackList?.reversed().let {
                 if (it != null) {
-                    viewModelSearch.tracks.value?.addAll(it)
+                    viewModelSearch.tracks.value?.tracks?.addAll(it)
+                    viewModelSearch.tracks.value?.statusTracks = true
+                    tracks = viewModelSearch.getTracksLiveData()
+                    trackList = viewModelSearch.getTrackListLiveData()
                 }
             } // загрузка сохраненного списка из sharedPreferences в реверсивном виде
             onTitleAndButton()
         } else {
             offTitleAndButton()
         }
-        adapter = viewModelSearch.tracks.value.let { TrackAdapter(it!!, this) }
+        //adapter = viewModelSearch.tracks.value?.tracks.let { TrackAdapter(it!!, this) }
+        adapter = tracks.value?.tracks.let { TrackAdapter(it!!,this) }
 
         codeRequest200 = findViewById(R.id.placeholder_200)
         codeRequest500 = findViewById(R.id.placeholder_500)
@@ -136,14 +156,16 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
     private fun cleanTextLine() {
         editText.setText("")
         input = ""
-        viewModelSearch.tracks.value?.clear()
+        viewModelSearch.tracks.value?.tracks?.clear()
+        viewModelSearch.tracks.value?.statusTracks = false
         viewModelSearch.writeList() //сохранение списка в sharedPreferences
         viewModelSearch.loadList() //загрузка из sharedPreferences
-        if (viewModelSearch.trackList.value?.isNotEmpty() == true) {
-            viewModelSearch.trackList.value?.reversed().let {
+        if (viewModelSearch.trackList.value?.trackList?.isNotEmpty() == true) {
+            viewModelSearch.trackList.value?.trackList?.reversed().let {
                 if (it != null) {
                     if (it.isNotEmpty()) {
-                        viewModelSearch.tracks.value?.addAll(it)
+                        viewModelSearch.tracks.value?.tracks?.addAll(it)
+                        viewModelSearch.tracks.value?.statusTracks = true
                     }
                 }
             }
@@ -178,33 +200,37 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                     progressBar.visibility = View.GONE
 
                     if (response.code() == 200) {
-                        viewModelSearch.tracks.value?.clear()
+                        viewModelSearch.tracks.value?.tracks?.clear()
+                        viewModelSearch.tracks.value?.statusTracks = false
                         val resp = response.body()?.results;
                         if (resp?.isNotEmpty() == true) {
                             if (codeRequest500.visibility == View.VISIBLE) {
                                 codeRequest500.visibility = View.GONE
                             }
-                            viewModelSearch.tracks.value?.addAll(resp)
+                            viewModelSearch.tracks.value?.tracks?.addAll(resp)
                             recyclerView.visibility = View.VISIBLE
                             recyclerView.adapter?.notifyDataSetChanged()
 
                         }
-                        if (viewModelSearch.tracks.value?.isEmpty() == true) {
+                        if (viewModelSearch.tracks.value?.tracks?.isEmpty() == true) {
                             recyclerView.visibility = View.GONE
                             codeRequest200.visibility = View.VISIBLE
+                            viewModelSearch.tracks.value?.statusTracks = false
                         } else {
-                            if (viewModelSearch.tracks.value?.isEmpty() == true && viewModelSearch.trackList.value?.isNotEmpty() == true) {
-                                viewModelSearch.trackList.value?.reversed().let {
+                            if (viewModelSearch.tracks.value?.tracks?.isEmpty() == true && viewModelSearch.trackList.value?.trackList?.isNotEmpty() == true) {
+                                viewModelSearch.tracks.value?.statusTracks = false
+                                viewModelSearch.trackList.value?.trackList?.reversed().let {
                                     if (it != null) {
-                                        viewModelSearch.tracks.value?.addAll(it)
+                                        viewModelSearch.tracks.value?.tracks?.addAll(it)
+                                        viewModelSearch.tracks.value?.statusTracks = true
                                     }
                                 }
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
-                            } else if (viewModelSearch.tracks.value?.isNotEmpty() == true) {
+                            } else if (viewModelSearch.tracks.value?.tracks?.isNotEmpty() == true) {
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
-                            } else if (viewModelSearch.tracks.value?.isEmpty() == true && viewModelSearch.trackList.value?.isEmpty() == true) {
+                            } else if (viewModelSearch.tracks.value?.tracks?.isEmpty() == true && viewModelSearch.trackList.value?.trackList?.isEmpty() == true) {
                                 recyclerView.visibility = View.VISIBLE
                                 codeRequest200.visibility = View.GONE
                             }
@@ -219,6 +245,7 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
                                 View.GONE // включение видимости заголовка "Вы искали"
                             clearButtonFind.visibility =
                                 View.GONE //кнопка "Очистить список" видимость true
+                            viewModelSearch.clearTrackList()
                         }
                     }
                 }
@@ -283,9 +310,18 @@ class FindActivity : AppCompatActivity(), TrackViewHolder.Listener {
             intent.putExtra("genreName", track.primaryGenreName)
         }
         startActivity(intent)
-        if (viewModelSearch.trackList.value?.isNotEmpty() == true) {
+        if (viewModelSearch.trackList.value?.trackList?.isNotEmpty() == true && viewModelSearch.tracks.value?.statusTracks == true) {
             viewModelSearch.writeList() //сохранение списка в sharedPreferences
             viewModelSearch.loadList() //загрузка из sharedPreferences
+            viewModelSearch.trackList.value?.trackList?.reversed().let {
+                if (it != null) {
+                    if (it.isNotEmpty()) {
+                        viewModelSearch.tracks.value?.tracks?.clear()
+                        viewModelSearch.tracks.value?.tracks?.addAll(it)
+                        viewModelSearch.tracks.value?.statusTracks = true
+                    }
+                }
+            }
             recyclerView.adapter?.notifyDataSetChanged()
         }
     }

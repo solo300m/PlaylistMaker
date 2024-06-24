@@ -1,9 +1,8 @@
-package com.example.playlistmaker.search.domain.api
+package com.example.playlistmaker.search.domain
 
-import android.content.SharedPreferences
 import com.example.playlistmaker.player.domain.models.Track
-import com.example.playlistmaker.search.data.dto.ITunes
-import com.example.playlistmaker.search.data.dto.Response
+import com.example.playlistmaker.search.domain.model.ITunes
+import com.example.playlistmaker.search.domain.model.Response
 
 interface SearchInteractor {
     fun getTracksTmp():ArrayList<Track>

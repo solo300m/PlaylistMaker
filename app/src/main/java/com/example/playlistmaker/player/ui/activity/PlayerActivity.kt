@@ -7,15 +7,15 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.player.domain.models.IntentData
+import com.example.playlistmaker.player.domain.models.PlayerData
 import com.example.playlistmaker.player.ui.utils.DataService
 import com.example.playlistmaker.player.ui.utils.ServiceMethod
-import com.example.playlistmaker.player.domain.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -33,6 +33,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var previewUrl: String
     private lateinit var currTime: TextView
     private lateinit var viewModelPlayer: PlayerViewModel
+    private  lateinit var locIntent: IntentData
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
@@ -43,28 +44,43 @@ class PlayerActivity : AppCompatActivity() {
     private val service: ServiceMethod = DataService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
+        locIntent = IntentData(intent = intent, intentStatus = true)
 
         viewModelPlayer = ViewModelProvider(
             this,
-            PlayerViewModel.getViewModelFactory(intent)
+            PlayerViewModel.getViewModelFactory(locIntent)
         )[PlayerViewModel::class.java]
         //viewModelPlayer.testViewModelPlayer()
         val currentTrack = viewModelPlayer.getCurrentTrack()
+        var stateLiveData = viewModelPlayer.getTrackPlayLiveData()
 
-        val trackId = currentTrack.trackId
-        val trackName = currentTrack.trackName
-        val pictureUrl = currentTrack.artworkUrl100
-        val singerName = currentTrack.artistName
-        val longTimeT = currentTrack.trackTimeMillis
-        val albumT = currentTrack.collectionName
-        val countryName = currentTrack.country
-        val realiseDate = currentTrack.releaseDate
-        val genreName = currentTrack.primaryGenreName
-        val previewUrl = currentTrack.previewUrl
+        viewModelPlayer.getTrackPlayLiveData().observe(this){
+            stateLiveData = viewModelPlayer.getTrackPlayLiveData()
+        }
+
+        /*val trackId = currentTrack?.trackId
+        val trackName = currentTrack?.trackName
+        val pictureUrl = currentTrack?.artworkUrl100
+        val singerName = currentTrack?.artistName
+        val longTimeT = currentTrack?.trackTimeMillis
+        val albumT = currentTrack?.collectionName
+        val countryName = currentTrack?.country
+        val realiseDate = currentTrack?.releaseDate
+        val genreName = currentTrack?.primaryGenreName
+        val previewUrl = currentTrack?.previewUrl*/
+
+        val trackId = stateLiveData.value?.track?.trackId
+        val trackName = stateLiveData.value?.track?.trackName
+        val pictureUrl = stateLiveData.value?.track?.artworkUrl100
+        val singerName = stateLiveData.value?.track?.artistName
+        val longTimeT = stateLiveData.value?.track?.trackTimeMillis
+        val albumT = stateLiveData.value?.track?.collectionName
+        val countryName = stateLiveData.value?.track?.country
+        val realiseDate = stateLiveData.value?.track?.releaseDate
+        val genreName = stateLiveData.value?.track?.primaryGenreName
+        val previewUrl = stateLiveData.value?.track?.previewUrl
 
         viewModelPlayer.init()
         //player.init(currentTrack.previewUrl)
@@ -111,7 +127,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         playButton = findViewById(R.id.PlayButton)
 
-        if (viewModelPlayer.player is MediaPlayerInteractorImpl) {
+        if (viewModelPlayer.getPlayer() is PlayerData) {
             viewModelPlayer.preparePlayer()
             playButton.setOnClickListener {
                 viewModelPlayer.playbackControl()
@@ -139,17 +155,19 @@ class PlayerActivity : AppCompatActivity() {
     private fun createUpdateTime(): Runnable {
         return object : Runnable {
             override fun run() {
-                val currentLocalTime = viewModelPlayer.getPlayer().currentPosition
-                if (viewModelPlayer.getStatus() == STATE_PLAYING && currentLocalTime >= 0) {
-                    val seconds = currentLocalTime!!
-                    currTime.text = dateFormat.format(seconds)
-                    handler?.postDelayed(this, DELAY)
-                } else if (viewModelPlayer.getStatus() == STATE_PREPARED) {
-                    playButton.setImageResource(R.drawable.playbutton)
-                    val seconds = 0
-                    currTime.text = dateFormat.format(seconds)
-                } else {
-                    handler?.removeCallbacks(this)
+                val currentLocalTime = viewModelPlayer.getPlayer()?.mediaPlayer?.currentPosition
+                if (currentLocalTime != null) {
+                    if (viewModelPlayer.getStatus() == STATE_PLAYING && currentLocalTime >= 0) {
+                        val seconds = currentLocalTime!!
+                        currTime.text = dateFormat.format(seconds)
+                        handler?.postDelayed(this, DELAY)
+                    } else if (viewModelPlayer.getStatus() == STATE_PREPARED) {
+                        playButton.setImageResource(R.drawable.playbutton)
+                        val seconds = 0
+                        currTime.text = dateFormat.format(seconds)
+                    } else {
+                        handler?.removeCallbacks(this)
+                    }
                 }
             }
         }

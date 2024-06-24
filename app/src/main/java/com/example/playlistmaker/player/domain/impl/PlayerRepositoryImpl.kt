@@ -1,40 +1,44 @@
 package com.example.playlistmaker.player.domain.impl
 
-import android.content.Intent
-import android.media.MediaPlayer
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.player.domain.models.IntentData
+import com.example.playlistmaker.player.domain.models.PlayerData
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.models.Track
 
 class PlayerRepositoryImpl() : PlayerRepository {
-    //private val intent:Intent = intent
+
     private var previewUrl: String = ""
-    private val mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private val mediaPlayer = Creator.getMediaPlayer()
 
-    override fun getCurrentTrack(intent: Intent): Track {
-        val trackId = intent.getLongExtra("trackId", 0L)
-        val trackName = intent.getStringExtra("trackName").toString()
-        val pictureUrl = intent.getStringExtra("trackPicture").toString()
-        val singerName = intent.getStringExtra("nameSinger").toString()
-        val longTimeT = intent.getLongExtra("longTime", 0L)
-        val albumT = intent.getStringExtra("album").toString()
-        val countryName = intent.getStringExtra("country").toString()
-        val realiseDate = intent.getStringExtra("realiseDate").toString()
-        val genreName = intent.getStringExtra("genreName").toString()
-        val previewUrl = intent.getStringExtra("url").toString()
+    override fun getCurrentTrack(locIntent: IntentData): Track? {
+        if (locIntent.intentStatus) {
+            val trackId = locIntent.intent?.getLongExtra("trackId", 0L)
+            val trackName = locIntent.intent?.getStringExtra("trackName").toString()
+            val pictureUrl = locIntent.intent?.getStringExtra("trackPicture").toString()
+            val singerName = locIntent.intent?.getStringExtra("nameSinger").toString()
+            val longTimeT = locIntent.intent?.getLongExtra("longTime", 0L)
+            val albumT = locIntent.intent?.getStringExtra("album").toString()
+            val countryName = locIntent.intent?.getStringExtra("country").toString()
+            val realiseDate = locIntent.intent?.getStringExtra("realiseDate").toString()
+            val genreName = locIntent.intent?.getStringExtra("genreName").toString()
+            val previewUrl = locIntent.intent?.getStringExtra("url").toString()
 
-        return Track(
-            trackId,
-            trackName,
-            singerName,
-            longTimeT,
-            pictureUrl,
-            albumT,
-            realiseDate,
-            genreName,
-            countryName,
-            previewUrl,
-        )
+            return Track(
+                trackId!!,
+                trackName,
+                singerName,
+                longTimeT!!,
+                pictureUrl,
+                albumT,
+                realiseDate,
+                genreName,
+                countryName,
+                previewUrl,
+            )
+        }else{
+            return null
+        }
 
     }
 
@@ -46,18 +50,18 @@ class PlayerRepositoryImpl() : PlayerRepository {
     }
 
     override fun preparePlayer() {
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
+        mediaPlayer.mediaPlayer?.setDataSource(previewUrl)
+        mediaPlayer.mediaPlayer?.prepareAsync()
+        mediaPlayer.mediaPlayer?.setOnPreparedListener {
+            mediaPlayer.playerState = STATE_PREPARED
         }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
+        mediaPlayer.mediaPlayer?.setOnCompletionListener {
+            mediaPlayer.playerState = STATE_PREPARED
         }
     }
 
     override fun playbackControl() {
-        when (playerState) {
+        when (mediaPlayer.playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -65,33 +69,34 @@ class PlayerRepositoryImpl() : PlayerRepository {
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
-            STATE_DEFAULT ->{
+
+            STATE_DEFAULT -> {
                 stopPlayer()
             }
         }
     }
 
     override fun startPlayer() {
-        mediaPlayer.start()
-        playerState = STATE_PLAYING
+        mediaPlayer.mediaPlayer?.start()
+        mediaPlayer.playerState = STATE_PLAYING
     }
 
     override fun stopPlayer() {
-        mediaPlayer.stop()
-        playerState = STATE_DEFAULT
+        mediaPlayer.mediaPlayer?.stop()
+        mediaPlayer.playerState = STATE_DEFAULT
     }
 
     override fun pausePlayer() {
-        mediaPlayer.pause()
-        playerState = STATE_PAUSED
+        mediaPlayer.mediaPlayer?.pause()
+        mediaPlayer.playerState = STATE_PAUSED
     }
 
-    override fun getPlayer(): MediaPlayer {
+    override fun getPlayer(): PlayerData {
         return mediaPlayer
     }
 
-    override fun getStatus(): Int {
-        return playerState
+    override fun getStatus(): Int? {
+        return mediaPlayer.playerState
     }
 
     companion object {

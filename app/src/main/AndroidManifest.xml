@@ -16,23 +16,23 @@
         android:theme="@style/Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
-            android:name=".ui.audioplayer.PlayerActivity"
+            android:name=".player.ui.activity.PlayerActivity"
             android:exported="false" />
         <activity
             android:name=".TestActivity"
             android:exported="false" />
 
         <activity
-            android:name=".find.FindActivity"
+            android:name=".search.ui.activity.FindActivity"
             android:exported="false" />
         <activity
-            android:name=".MediatekaActivity"
+            android:name=".sharing.ui.activity.MediatekaActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".settings.ui.activity.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".main.ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

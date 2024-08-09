@@ -11,7 +11,7 @@ class PlayerRepositoryImpl() : PlayerRepository {
     private var previewUrl: String = ""
     private val mediaPlayer = Creator.getMediaPlayer()
 
-    override fun getCurrentTrack(locIntent: IntentData): Track? {
+   /* override fun getCurrentTrack(locIntent: IntentData): Track? {
         if (locIntent.intentStatus) {
             val trackId = locIntent.intent?.getLongExtra("trackId", 0L)
             val trackName = locIntent.intent?.getStringExtra("trackName").toString()
@@ -40,7 +40,7 @@ class PlayerRepositoryImpl() : PlayerRepository {
             return null
         }
 
-    }
+    }*/
 
     override fun init(expression: String) {
         if (!expression.isNullOrEmpty())

@@ -5,7 +5,7 @@ import com.example.playlistmaker.player.domain.models.PlayerData
 import com.example.playlistmaker.player.domain.models.Track
 
 interface PlayerRepository {
-    fun getCurrentTrack(locIntent: IntentData):Track?
+    //fun getCurrentTrack(track: Track):Track?
     fun init(expression:String)
     fun preparePlayer()
     fun playbackControl()

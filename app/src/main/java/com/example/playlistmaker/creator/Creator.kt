@@ -2,6 +2,7 @@ package com.example.playlistmaker.creator
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.media.MediaPlayer
 import com.example.playlistmaker.main.domain.SharedRepository
 import com.example.playlistmaker.main.data.SharedRepositoryImpl
@@ -12,6 +13,7 @@ import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.MediaPlayerInteractor
 import com.example.playlistmaker.player.domain.MediaPlayerInteractorImpl
+import com.example.playlistmaker.player.domain.models.Track
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.SaveListRepository
 import com.example.playlistmaker.search.data.SaveListRepositoryImpl
@@ -32,7 +34,6 @@ object Creator {
     }
 
 
-
     fun getSharedRepository(): SharedRepository {
         return SharedRepositoryImpl()
     }
@@ -44,6 +45,22 @@ object Creator {
                 SETTING_SAVE
             )
         )
+    }
+
+    fun getTrackByIntent(intent: Intent): Track {
+        val track = Track(
+            trackId = intent.getLongExtra("trackId", 0L),
+            trackName = intent.getStringExtra("trackName").toString(),
+            artworkUrl100 = intent.getStringExtra("trackPicture").toString(),
+            artistName = intent.getStringExtra("nameSinger").toString(),
+            trackTimeMillis = intent.getLongExtra("longTime", 0L),
+            collectionName = intent.getStringExtra("album").toString(),
+            country = intent.getStringExtra("country").toString(),
+            releaseDate = intent.getStringExtra("realiseDate").toString(),
+            primaryGenreName = intent.getStringExtra("genreName").toString(),
+            previewUrl = intent.getStringExtra("url").toString(),
+        );
+        return track
     }
 
     fun getPlayerRepository(): PlayerRepository {

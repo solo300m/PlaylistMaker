@@ -7,9 +7,9 @@ import com.example.playlistmaker.player.domain.models.Track
 
 class MediaPlayerInteractorImpl(playerRepository: PlayerRepository) : MediaPlayerInteractor {
     private val playerRep = playerRepository
-    override fun getCurrentTrack(locIntent: IntentData): Track? {
+    /*override fun getCurrentTrack(locIntent: IntentData): Track? {
        return locIntent?.let { playerRep.getCurrentTrack(it) }
-    }
+    }*/
 
     override fun init(expression: String) {
         playerRep.init(expression)

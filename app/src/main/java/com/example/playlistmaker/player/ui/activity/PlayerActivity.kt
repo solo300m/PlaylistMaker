@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,8 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.models.IntentData
 import com.example.playlistmaker.player.domain.models.PlayerData
+import com.example.playlistmaker.player.domain.models.Track
 import com.example.playlistmaker.player.ui.utils.DataService
 import com.example.playlistmaker.player.ui.utils.ServiceMethod
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
@@ -33,7 +36,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var previewUrl: String
     private lateinit var currTime: TextView
     private lateinit var viewModelPlayer: PlayerViewModel
-    private  lateinit var locIntent: IntentData
+    private  lateinit var currentTrack: Track
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm : ss", Locale.getDefault())
@@ -46,14 +49,14 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
-        locIntent = IntentData(intent = intent, intentStatus = true)
+        currentTrack = Creator.getTrackByIntent(intent)
 
         viewModelPlayer = ViewModelProvider(
             this,
-            PlayerViewModel.getViewModelFactory(locIntent)
+            PlayerViewModel.getViewModelFactory(currentTrack)
         )[PlayerViewModel::class.java]
         //viewModelPlayer.testViewModelPlayer()
-        val currentTrack = viewModelPlayer.getCurrentTrack()
+        //val currentTrack = viewModelPlayer.getCurrentTrack()
         var stateLiveData = viewModelPlayer.getTrackPlayLiveData()
 
         viewModelPlayer.getTrackPlayLiveData().observe(this){
@@ -172,6 +175,9 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
     }
+    /*private fun getTrack(intent:Intent){
+        val track = Track(trackId = intent.getLongExtra())
+    }*/
 
     companion object {
         private const val STATE_DEFAULT = 0

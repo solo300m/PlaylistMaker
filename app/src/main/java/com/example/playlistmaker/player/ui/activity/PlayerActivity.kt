@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -20,7 +21,9 @@ import com.example.playlistmaker.player.domain.models.Track
 import com.example.playlistmaker.player.ui.utils.DataService
 import com.example.playlistmaker.player.ui.utils.ServiceMethod
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
+import com.example.playlistmaker.search.domain.model.TrackPlayModel
 import java.text.SimpleDateFormat
+import java.util.Collections.copy
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
@@ -46,6 +49,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private val service: ServiceMethod = DataService()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player2)
@@ -55,35 +59,25 @@ class PlayerActivity : AppCompatActivity() {
             this,
             PlayerViewModel.getViewModelFactory(currentTrack)
         )[PlayerViewModel::class.java]
-        //viewModelPlayer.testViewModelPlayer()
-        //val currentTrack = viewModelPlayer.getCurrentTrack()
-        var stateLiveData = viewModelPlayer.getTrackPlayLiveData()
+
+        var stateLiveData:LiveData<TrackPlayModel>? = null
+        stateLiveData = viewModelPlayer.getTrackPlayLiveData()
 
         viewModelPlayer.getTrackPlayLiveData().observe(this){
             stateLiveData = viewModelPlayer.getTrackPlayLiveData()
+            //viewModelPlayer.init()
         }
 
-        /*val trackId = currentTrack?.trackId
-        val trackName = currentTrack?.trackName
-        val pictureUrl = currentTrack?.artworkUrl100
-        val singerName = currentTrack?.artistName
-        val longTimeT = currentTrack?.trackTimeMillis
-        val albumT = currentTrack?.collectionName
-        val countryName = currentTrack?.country
-        val realiseDate = currentTrack?.releaseDate
-        val genreName = currentTrack?.primaryGenreName
-        val previewUrl = currentTrack?.previewUrl*/
-
-        val trackId = stateLiveData.value?.track?.trackId
-        val trackName = stateLiveData.value?.track?.trackName
-        val pictureUrl = stateLiveData.value?.track?.artworkUrl100
-        val singerName = stateLiveData.value?.track?.artistName
-        val longTimeT = stateLiveData.value?.track?.trackTimeMillis
-        val albumT = stateLiveData.value?.track?.collectionName
-        val countryName = stateLiveData.value?.track?.country
-        val realiseDate = stateLiveData.value?.track?.releaseDate
-        val genreName = stateLiveData.value?.track?.primaryGenreName
-        val previewUrl = stateLiveData.value?.track?.previewUrl
+        val trackId = stateLiveData?.value?.track?.trackId
+        val trackName = stateLiveData?.value?.track?.trackName
+        val pictureUrl = stateLiveData?.value?.track?.artworkUrl100
+        val singerName = stateLiveData?.value?.track?.artistName
+        val longTimeT = stateLiveData?.value?.track?.trackTimeMillis
+        val albumT = stateLiveData?.value?.track?.collectionName
+        val countryName = stateLiveData?.value?.track?.country
+        val realiseDate = stateLiveData?.value?.track?.releaseDate
+        val genreName = stateLiveData?.value?.track?.primaryGenreName
+        val previewUrl = stateLiveData?.value?.track?.previewUrl
 
         viewModelPlayer.init()
         //player.init(currentTrack.previewUrl)

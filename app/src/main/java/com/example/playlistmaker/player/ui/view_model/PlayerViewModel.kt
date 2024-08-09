@@ -21,10 +21,11 @@ class PlayerViewModel(
 ) : AndroidViewModel(application) {
 
 
-    private var player: MediaPlayerInteractor = Creator.getPlayerInteractor()
+    //private var player: MediaPlayerInteractor = Creator.getPlayerInteractor()
 
     private val currentTrack = track
-    private var trackAndPlayer:TrackPlayModel = TrackPlayModel(currentTrack, player.getStatus())
+    private var trackAndPlayer: TrackPlayModel =
+        TrackPlayModel(currentTrack, playerState = 0, Creator.getPlayerInteractor())
 
     companion object {
         fun getViewModelFactory(track: Track): ViewModelProvider.Factory =
@@ -34,13 +35,16 @@ class PlayerViewModel(
                 }
             }
     }
+
     private val playTrack = MutableLiveData(trackAndPlayer)
-    init {
-        val tmpTrack:Track? = getCurrentTrack()
+
+    /*init {
+        val tmpTrack: Track? = getCurrentTrack()
         if (tmpTrack != null)
             playTrack.value?.track = tmpTrack
-        playTrack.value?.playerState = player.getStatus()
-    }
+        playTrack.value?.playerState = 0
+    }*/
+
     fun getTrackPlayLiveData(): LiveData<TrackPlayModel> = playTrack
 
     fun getCurrentTrack(): Track? {
@@ -48,38 +52,38 @@ class PlayerViewModel(
     }
 
     fun init() {
-        getTrackPlayLiveData().value?.track?.let { player.init(it.previewUrl) }
+        playTrack.value?.playerInteractor?.init(expression=playTrack.value?.track?.previewUrl.toString())
     }
 
     fun preparePlayer() {
-        player.preparePlayer()
+        playTrack.value?.playerInteractor?.preparePlayer()
         playTrack.value?.playerState = 1
     }
 
     fun playbackControl() {
-        player.playbackControl()
+        playTrack.value?.playerInteractor?.playbackControl()
     }
 
     fun startPlayer() {
-        player.startPlayer()
+        playTrack.value?.playerInteractor?.startPlayer()
         playTrack.value?.playerState = 2
     }
 
     fun pausePlayer() {
-        player.pausePlayer()
+        playTrack.value?.playerInteractor?.pausePlayer()
         playTrack.value?.playerState = 3
     }
 
     fun stopPlayer() {
-        player.stopPlayer()
+        playTrack.value?.playerInteractor?.stopPlayer()
         playTrack.value?.playerState = 0
     }
 
     fun getPlayer(): PlayerData? {
-        return player.getPlayer()
+        return getTrackPlayLiveData().value?.playerInteractor?.getPlayer()
     }
 
     fun getStatus(): Int? {
-        return player.getStatus()
+        return getTrackPlayLiveData().value?.playerInteractor?.getStatus()
     }
 }

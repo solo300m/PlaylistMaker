@@ -1,9 +1,11 @@
 package com.example.playlistmaker.player.ui.activity
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -48,7 +50,7 @@ class PlayerActivity : AppCompatActivity() {
     private var handler: Handler? = null
 
     private val service: ServiceMethod = DataService()
-
+    private var stateLiveData:LiveData<TrackPlayModel>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +62,7 @@ class PlayerActivity : AppCompatActivity() {
             PlayerViewModel.getViewModelFactory(currentTrack)
         )[PlayerViewModel::class.java]
 
-        var stateLiveData:LiveData<TrackPlayModel>? = null
+
         stateLiveData = viewModelPlayer.getTrackPlayLiveData()
 
         viewModelPlayer.getTrackPlayLiveData().observe(this){
@@ -172,7 +174,21 @@ class PlayerActivity : AppCompatActivity() {
     /*private fun getTrack(intent:Intent){
         val track = Track(trackId = intent.getLongExtra())
     }*/
+    override fun onPause() {
+        super.onPause()
+        Log.d("ERROR_MY", "Fist, ${viewModelPlayer.getStatus().toString()}")
+        viewModelPlayer.pausePlayer()
+        Log.d("ERROR_MY", "Second, ${viewModelPlayer.getStatus().toString()}")
+        Log.d("ERROR_MY", "LiveView, ${stateLiveData?.value?.playerInteractor?.getStatus().toString()}")
+       /* viewModelPlayer.preparePlayer()*/
+        Log.d("ERROR_MY", "Three, ${viewModelPlayer.getStatus().toString()}")
+    }
 
+    override fun onRestart() {
+        super.onRestart()
+        stateLiveData?.value?.playerInteractor?.init(stateLiveData?.value?.track?.previewUrl.toString())
+        stateLiveData?.value?.playerInteractor?.startPlayer()
+    }
     companion object {
         private const val STATE_DEFAULT = 0
         private const val STATE_PREPARED = 1
